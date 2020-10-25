@@ -1,4 +1,6 @@
-## NOTICE
+## Shields Branch
+
+You're looking at code in the Shields branch, the most tremendous branch.
 
 This repository contains the public FTC SDK for the Ultimate Goal (2020-2021) competition season.
 
