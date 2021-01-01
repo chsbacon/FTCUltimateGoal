@@ -39,7 +39,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
  * original Android camera API
  */
 @TeleOp
-public class ColorSensing extends LinearOpMode
+public class CameraTest extends LinearOpMode
 {
     OpenCvCamera phoneCam;
 
