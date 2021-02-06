@@ -41,9 +41,9 @@ import org.firstinspires.ftc.teamcode.HardwareBACONbot;
 
 import java.util.Locale;
 
-import javax.print.attribute.Size2DSyntax;
+//import javax.print.attribute.Size2DSyntax;
 
-import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
+//import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
 
 //Imports Abby is adding (color sensing)
 import org.opencv.core.Core;
@@ -168,7 +168,7 @@ public class Auto extends LinearOpMode {
         while (!gamepad1.a && !gamepad1.y) {
         }
         if (gamepad1.a) {
-            task = drop&park;
+            task = dropPark;
         }
         if (gamepad1.y) {
             task = fullRun ;
@@ -233,7 +233,7 @@ public class Auto extends LinearOpMode {
         }
 
         //drop&park------------------------------------------------------------------------------------------------
-        if ((task == drop&park) && (teamcolor == red)) {
+        if ((task == dropPark) && (teamcolor == red)) {
             initializeWhiteLight();
             //This gets the robot in the proper place to sense the rings
             positionRobot();
@@ -246,7 +246,7 @@ public class Auto extends LinearOpMode {
             stopDriving();
 
         }
-        if ((task == drop&park) && (teamcolor == blue)) {
+        if ((task == dropPark) && (teamcolor == blue)) {
             initializeWhiteLight();
             //This gets the robot in the proper place to sense the rings
             positionRobot();
@@ -846,44 +846,3 @@ public class Auto extends LinearOpMode {
     }
 
 }
-// FTC Team 7080 BACON
-// Autonomous code Ultimate Goal
-
-/*package org.firstinspires.ftc.teamcode;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.HardwareBACONbot;
-
-import java.util.Locale;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
-
-@Autonomous(name = "BACON: Autonomous 2021", group = "Opmode")
-//@Disabled
-
-//name file AutonomousB
-public class Auto extends LinearOpMode {
-
-}
-*/
