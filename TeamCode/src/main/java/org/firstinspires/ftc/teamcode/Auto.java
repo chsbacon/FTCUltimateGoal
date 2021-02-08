@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-// import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 //imports related to the opmode
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -85,8 +85,6 @@ public class Auto extends LinearOpMode {
     // int left/right = 0 or 1 depending on situation
     // int madeUpVariable; to initialize a variable
     // int distance = value of distace sensor to desired location at point of initialization
-    int blue = 1;
-    int red = 2;
     int RINGDIST = 860;
 
 
@@ -110,8 +108,12 @@ public class Auto extends LinearOpMode {
 
 
         int teamcolor = 0; // 1 = Blue 2 = Red
+        int blue = 1;
+        int red = 2;
 
         int task = 0; //1 = drop&park  2 = fullRun
+        int dropPark = 1;
+        int fullRun = 2;
 
         int side = 0; // 1 = left side start 2 = right side start
 
@@ -142,19 +144,17 @@ public class Auto extends LinearOpMode {
         //This sets the strips of lights to the team color
         if (gamepad1.x) {
             teamcolor = blue;
-            public void run() {
                 robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE;
                 robot.blinkinLedDriver.setPattern(robot.pattern);
-            }
+
 
         }
 
         if (gamepad1.b) {
             teamcolor = red;
-            public void run() {
-                robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
-                robot.blinkinLedDriver.setPattern(robot.pattern);
-            }
+            robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
+            robot.blinkinLedDriver.setPattern(robot.pattern);
+
 
         }
 
@@ -688,19 +688,19 @@ public class Auto extends LinearOpMode {
     void wobbleDrop() {
         wobbleDown();
         wobbleOpen();
-        telemetry.addData("Wobble goal delivered");
+        telemetry.addData("Wobble goal delivered", 0);
         telemetry.update();
     }
 
     void wobbleRaise() {
         wobbleClose();
         wobbleUp();
-        telemetry.addData("Wobble goal up");
+        telemetry.addData("Wobble goal up", 0);
         telemetry.update();
     }
 
     //Scan Function_______________________________________________________________________________________________________________
-    void ringScan(){
+
         public static class SkystoneDeterminationPipeline extends OpenCvPipeline
         {
             /*
@@ -804,7 +804,7 @@ public class Auto extends LinearOpMode {
                 return avg1;
             }
         }
-    }
+
 
 
     void wobblePosition(){
@@ -831,7 +831,7 @@ public class Auto extends LinearOpMode {
     }
 
 
-}
+
 
     //----------------------------------------------------------------------------------------------
     // Formatting
