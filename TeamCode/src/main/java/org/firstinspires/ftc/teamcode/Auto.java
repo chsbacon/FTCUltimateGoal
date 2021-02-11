@@ -1,95 +1,95 @@
 // FTC Team 7080 BACON
 // Autonomous code 2020-2021
 
-package org.firstinspires.ftc.teamcode;
+        package org.firstinspires.ftc.teamcode;
 
 // All imports here that are not commented out are likely reusable and helpful for this coming year
 
 //These three lines I believe work with the app on the phone. Not sure if the color one is something we need to think about for this year...
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
+        import android.app.Activity;
+        import android.graphics.Color;
+        import android.view.View;
 
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+        import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 //imports related to the opmode
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 //Sensors and motors...
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.hardware.ColorSensor;
+        import com.qualcomm.robotcore.hardware.DistanceSensor;
+        import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 //Imports related to navigation and motion (Driving) (Vuforia)
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
+        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+        import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+        import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 // Hardware map
-import org.firstinspires.ftc.teamcode.HardwareBACONbot;
+        import org.firstinspires.ftc.teamcode.HardwareBACONbot;
 
-import java.util.Locale;
+        import java.util.Locale;
 
 //import javax.print.attribute.Size2DSyntax;
 
 //import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
 
 //Imports Abby is adding (color sensing)
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.openftc.easyopencv.OpenCvPipeline;
+        import org.opencv.core.Core;
+        import org.opencv.core.Mat;
+        import org.opencv.core.Point;
+        import org.opencv.core.Rect;
+        import org.opencv.core.Scalar;
+        import org.opencv.imgproc.Imgproc;
+        import org.openftc.easyopencv.OpenCvCamera;
+        import org.openftc.easyopencv.OpenCvCameraFactory;
+        import org.openftc.easyopencv.OpenCvCameraRotation;
+        import org.openftc.easyopencv.OpenCvInternalCamera;
+        import org.openftc.easyopencv.OpenCvPipeline;
 
 
-@Autonomous(name = "BACON: Autonomous 2021", group = "Opmode")
+        @Autonomous(name = "BACON: Autonomous 2021", group = "Opmode")
 //@Disabled
 
 
-public class Auto extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
+        public class Auto extends LinearOpMode {
+        private ElapsedTime runtime = new ElapsedTime();
 
-    HardwareBACONbot robot = new HardwareBACONbot();
+        HardwareBACONbot robot = new HardwareBACONbot();
 
-    //OpenCV stuff
-    OpenCvInternalCamera phoneCam;
-    SkystoneDeterminationPipeline pipeline;
+        //OpenCV stuff
+        OpenCvInternalCamera phoneCam;
+        SkystoneDeterminationPipeline pipeline;
 
-    // === DEFINE CONSTANTS HERE! ===
+        // === DEFINE CONSTANTS HERE! ===
 
     /*double STRAFE_SPEED = 0.3;  // Motor power global variables
     double FAST_SPEED = 1.0;
     double SLOW_SPEED = 0.2;*/
 
-    //Here is where ints will go:
-    //For example:
-    // int blueTape/redTape = color sensor value
-    // int blue/red = 1 or 0 depending on situation
-    // int left/right = 0 or 1 depending on situation
-    // int madeUpVariable; to initialize a variable
-    // int distance = value of distace sensor to desired location at point of initialization
-    int RINGDIST = 860;
+        //Here is where ints will go:
+        //For example:
+        // int blueTape/redTape = color sensor value
+        // int blue/red = 1 or 0 depending on situation
+        // int left/right = 0 or 1 depending on situation
+        // int madeUpVariable; to initialize a variable
+        // int distance = value of distace sensor to desired location at point of initialization
+        int RINGDIST = 860;
 
 
-    // ==============================
-    public void runOpMode() {
+        // ==============================
+        public void runOpMode() {
         //OpenCV stuff
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
@@ -99,11 +99,11 @@ public class Auto extends LinearOpMode {
 
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
-            @Override
-            public void onOpened()
-            {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-            }
+        @Override
+        public void onOpened()
+        {
+        phoneCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+        }
         });
 
 
@@ -143,17 +143,17 @@ public class Auto extends LinearOpMode {
 
         //This sets the strips of lights to the team color
         if (gamepad1.x) {
-            teamcolor = blue;
-                robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE;
-                robot.blinkinLedDriver.setPattern(robot.pattern);
+        teamcolor = blue;
+        robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE;
+        robot.blinkinLedDriver.setPattern(robot.pattern);
 
 
         }
 
         if (gamepad1.b) {
-            teamcolor = red;
-            robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
-            robot.blinkinLedDriver.setPattern(robot.pattern);
+        teamcolor = red;
+        robot.pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED;
+        robot.blinkinLedDriver.setPattern(robot.pattern);
 
 
         }
@@ -168,10 +168,10 @@ public class Auto extends LinearOpMode {
         while (!gamepad1.a && !gamepad1.y) {
         }
         if (gamepad1.a) {
-            task = dropPark;
+        task = dropPark;
         }
         if (gamepad1.y) {
-            task = fullRun ;
+        task = fullRun ;
         }
         telemetry.addData("task ", task);
         telemetry.update();
@@ -202,120 +202,120 @@ public class Auto extends LinearOpMode {
 
         //First troubleshooting steps for this section would be to check the direction of the strafes in scan and grab
         if ((task == fullRun) && (teamcolor == red)) {
-            initializeWhiteLight();
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            park();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            stopDriving();
-            //To powershot
-            launchRing();
+        initializeWhiteLight();
+        //This gets the robot in the proper place to sense the rings
+        positionRobot();
+        //Navigating to the correct square
+        wobblePosition();
+        //Place the wobble goal in the square
+        wobbleDrop();
+        park();
+        //go drop the wobble goal in the correct zone and return to the parking line
+        stopDriving();
+        //To powershot
+        launchRing();
 
         }
         if ((task == fullRun) && (teamcolor == blue)) {
-            initializeWhiteLight();
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            park();
-            stopDriving();
-            //To powershot
-            launchRing();
+        initializeWhiteLight();
+        //This gets the robot in the proper place to sense the rings
+        positionRobot();
+        //Navigating to the correct square
+        wobblePosition();
+        //Place the wobble goal in the square
+        wobbleDrop();
+        //go drop the wobble goal in the correct zone and return to the parking line
+        park();
+        stopDriving();
+        //To powershot
+        launchRing();
 
         }
 
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
-            initializeWhiteLight();
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            park();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            stopDriving();
+        initializeWhiteLight();
+        //This gets the robot in the proper place to sense the rings
+        positionRobot();
+        //Navigating to the correct square
+        wobblePosition();
+        //Place the wobble goal in the square
+        wobbleDrop();
+        park();
+        //go drop the wobble goal in the correct zone and return to the parking line
+        stopDriving();
 
         }
         if ((task == dropPark) && (teamcolor == blue)) {
-            initializeWhiteLight();
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            park();
-            stopDriving();
+        initializeWhiteLight();
+        //This gets the robot in the proper place to sense the rings
+        positionRobot();
+        //Navigating to the correct square
+        wobblePosition();
+        //Place the wobble goal in the square
+        wobbleDrop();
+        //go drop the wobble goal in the correct zone and return to the parking line
+        park();
+        stopDriving();
         }
         //  -----------------------------------------------------------------------------------------------------------------------
 
 
 
-    }
+        }
 
-    // Functions ----------------------------------------------------------------------------------------------------------------
+        // Functions ----------------------------------------------------------------------------------------------------------------
 
 
-    //Driving Functions_______________________________________________________________________________________________________________
+        //Driving Functions_______________________________________________________________________________________________________________
 
-    //Stop Driving - Kill power to all the motors
-    void stopDriving() {
+        //Stop Driving - Kill power to all the motors
+        void stopDriving() {
 
         robot.frontLeftMotor.setPower(0);
         robot.frontRightMotor.setPower(0);
         robot.backLeftMotor.setPower(0);
         robot.backRightMotor.setPower(0);
 
-    }
+        }
 
-    //Drive Backwards - Used for starting the game
-    void driveBackwards() {
+        //Drive Backwards - Used for starting the game
+        void driveBackwards() {
         robot.frontLeftMotor.setPower(-0.5);
         robot.frontRightMotor.setPower(0.5);
         robot.backLeftMotor.setPower(-0.5);
         robot.backRightMotor.setPower(0.5);
-    }
+        }
 
-    //Drive Backwards Slow - Used for starting the game
-    void driveBackwardsSlow() {
+        //Drive Backwards Slow - Used for starting the game
+        void driveBackwardsSlow() {
         robot.frontLeftMotor.setPower(-0.3);
         robot.frontRightMotor.setPower(0.3);
         robot.backLeftMotor.setPower(-0.3);
         robot.backRightMotor.setPower(0.3);
-    }
+        }
 
 
-    //Drive Forwards - Towards where the Backsensor is facing
-    void driveForward() {
+        //Drive Forwards - Towards where the Backsensor is facing
+        void driveForward() {
         robot.frontLeftMotor.setPower(0.5);
         robot.backLeftMotor.setPower(0.5);
         robot.backRightMotor.setPower(-0.5);
         robot.frontRightMotor.setPower(-0.5);
-    }
+        }
 
-    //Drive Forwards Slow- Towards where the Backsensor is facing
-    void driveForwardSlow() {
+        //Drive Forwards Slow- Towards where the Backsensor is facing
+        void driveForwardSlow() {
         robot.frontLeftMotor.setPower(SLOW_SPEED);
         robot.backLeftMotor.setPower(SLOW_SPEED);
         robot.backRightMotor.setPower(-1 * SLOW_SPEED);
         robot.frontRightMotor.setPower(-1 * SLOW_SPEED);
-    }
+        }
 
 
 
-    //Strafe Left - (used to strafe towards the center line for parking)
-    void strafeLeft(int side, double pwr, Orientation target) {  //added int pwr to reduce initial power
+        //Strafe Left - (used to strafe towards the center line for parking)
+        void strafeLeft(int side, double pwr, Orientation target) {  //added int pwr to reduce initial power
         //Get the current orientation
         Orientation currOrient;
         currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -354,7 +354,7 @@ public class Auto extends LinearOpMode {
         double d; // Front distance correction
         d = -(FRONTDIST - 45 - robot.frontDistance.getDistance(DistanceUnit.MM)) / 200;
         if (side == mat) {
-            d = 0;
+        d = 0;
         }
         // Normalize the values so none exceeds +/- 1.0
         frontLeft = -pwr + r + d;
@@ -363,10 +363,10 @@ public class Auto extends LinearOpMode {
         frontRight = -pwr + r - d;
         max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
         if (max > 1.0) {
-            frontLeft = frontLeft / max;
-            frontRight = frontRight / max;
-            backLeft = backLeft / max;
-            backRight = backRight / max;
+        frontLeft = frontLeft / max;
+        frontRight = frontRight / max;
+        backLeft = backLeft / max;
+        backRight = backRight / max;
         }
 
         //send the power to the motors
@@ -375,9 +375,9 @@ public class Auto extends LinearOpMode {
         robot.backRightMotor.setPower(backRight);
         robot.frontRightMotor.setPower(frontRight);
 
-    }
+        }
 
-    void strafeRight(int side, double pwr, Orientation target) {  //added int pwr to reduce initial power
+        void strafeRight(int side, double pwr, Orientation target) {  //added int pwr to reduce initial power
         //Get the current orientation
         Orientation currOrient;
         currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -415,7 +415,7 @@ public class Auto extends LinearOpMode {
         double d; // Front distance correction
         d = -(FRONTDIST - 45 - robot.frontDistance.getDistance(DistanceUnit.MM)) / 200;
         if (side == mat) {
-            d = 0;
+        d = 0;
         }
         // Normalize the values so none exceeds +/- 1.0
         frontLeft = pwr + r + d;
@@ -424,10 +424,10 @@ public class Auto extends LinearOpMode {
         frontRight = pwr + r - d;
         max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
         if (max > 1.0) {
-            frontLeft = frontLeft / max;
-            frontRight = frontRight / max;
-            backLeft = backLeft / max;
-            backRight = backRight / max;
+        frontLeft = frontLeft / max;
+        frontRight = frontRight / max;
+        backLeft = backLeft / max;
+        backRight = backRight / max;
         }
 
         //send the power to the motors
@@ -435,7 +435,7 @@ public class Auto extends LinearOpMode {
         robot.backLeftMotor.setPower(backLeft); //Changing the order in which the wheels start
         robot.backRightMotor.setPower(backRight);
         robot.frontRightMotor.setPower(frontRight);
-    }
+        }
 
 
 
@@ -443,8 +443,8 @@ public class Auto extends LinearOpMode {
 
 
 
-    //drives straight for a desired distanced based off of the back distance sensor
-    void driveStraightDistance(double pwr, Orientation target, double desiredDistance){
+        //drives straight for a desired distanced based off of the back distance sensor
+        void driveStraightDistance(double pwr, Orientation target, double desiredDistance){
 
         //orients
         Orientation targetOrient;
@@ -461,59 +461,59 @@ public class Auto extends LinearOpMode {
 
         while(((robot.backDistance.getDistance(DistanceUnit.MM) < desiredDistance) && (opModeIsActive()))){
 
-            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
+        currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
 
-            double error = targAng - currAng;
-
-
-            double r = (-error / 180) / (pwr);
-            //r = 0;
-
-            // Normalize the values so none exceeds +/- 1.0
-            frontLeft = pwr + r ;
-            backLeft = pwr + r ;
-            backRight = pwr - r ;
-            frontRight = pwr - r ;
-
-            frontLeft = -frontLeft;
-            backLeft = -backLeft;
-
-            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
-            if (max > 1.0) {
-                frontLeft = frontLeft / max;
-                frontRight = frontRight / max;
-                backLeft = backLeft / max;
-                backRight = backRight / max;
-            }
+        double error = targAng - currAng;
 
 
+        double r = (-error / 180) / (pwr);
+        //r = 0;
 
-            telemetry.addData("front left", "%.2f", frontLeft);
-            telemetry.addData("front right", "%.2f", frontRight);
-            telemetry.addData("back left", "%.2f", backLeft);
-            telemetry.addData("back right", "%.2f", backRight);
+        // Normalize the values so none exceeds +/- 1.0
+        frontLeft = pwr + r ;
+        backLeft = pwr + r ;
+        backRight = pwr - r ;
+        frontRight = pwr - r ;
 
-            telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
-            telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+        frontLeft = -frontLeft;
+        backLeft = -backLeft;
 
-            telemetry.update();
+        max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
+        if (max > 1.0) {
+        frontLeft = frontLeft / max;
+        frontRight = frontRight / max;
+        backLeft = backLeft / max;
+        backRight = backRight / max;
+        }
 
-            //send the power to the motors
-            robot.frontLeftMotor.setPower(frontLeft);
-            robot.backLeftMotor.setPower(backLeft);
-            robot.backRightMotor.setPower(backRight);
-            robot.frontRightMotor.setPower(frontRight);
+
+
+        telemetry.addData("front left", "%.2f", frontLeft);
+        telemetry.addData("front right", "%.2f", frontRight);
+        telemetry.addData("back left", "%.2f", backLeft);
+        telemetry.addData("back right", "%.2f", backRight);
+
+        telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
+        telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+
+        telemetry.update();
+
+        //send the power to the motors
+        robot.frontLeftMotor.setPower(frontLeft);
+        robot.backLeftMotor.setPower(backLeft);
+        robot.backRightMotor.setPower(backRight);
+        robot.frontRightMotor.setPower(frontRight);
 
 
 
         }
 
-    }
+        }
 
-    //drives forward at the heading it was called at
-    // for example, calling this when the robot is at 60 heading, it will go to that heading, even if it gets knocked off course
-    void driveStraightTime(double pwr, Orientation target, double desiredTime){
+        //drives forward at the heading it was called at
+        // for example, calling this when the robot is at 60 heading, it will go to that heading, even if it gets knocked off course
+        void driveStraightTime(double pwr, Orientation target, double desiredTime){
 
         //orients
         Orientation targetOrient;
@@ -534,59 +534,59 @@ public class Auto extends LinearOpMode {
 
 
 
-            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
+        currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
 
-            double error = targAng - currAng;
-
-
-            double r = (-error / 180) / (pwr);
-            //r = 0;
-
-            // Normalize the values so none exceeds +/- 1.0
-            frontLeft = pwr + r ;
-            backLeft = pwr + r ;
-            backRight = pwr - r ;
-            frontRight = pwr - r ;
-
-            frontLeft = -frontLeft;
-            backLeft = -backLeft;
-
-            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
-            if (max > 1.0) {
-                frontLeft = frontLeft / max;
-                frontRight = frontRight / max;
-                backLeft = backLeft / max;
-                backRight = backRight / max;
-            }
+        double error = targAng - currAng;
 
 
+        double r = (-error / 180) / (pwr);
+        //r = 0;
 
-            telemetry.addData("front left", "%.2f", frontLeft);
-            telemetry.addData("front right", "%.2f", frontRight);
-            telemetry.addData("back left", "%.2f", backLeft);
-            telemetry.addData("back right", "%.2f", backRight);
+        // Normalize the values so none exceeds +/- 1.0
+        frontLeft = pwr + r ;
+        backLeft = pwr + r ;
+        backRight = pwr - r ;
+        frontRight = pwr - r ;
 
-            telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
-            telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+        frontLeft = -frontLeft;
+        backLeft = -backLeft;
 
-            telemetry.update();
+        max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
+        if (max > 1.0) {
+        frontLeft = frontLeft / max;
+        frontRight = frontRight / max;
+        backLeft = backLeft / max;
+        backRight = backRight / max;
+        }
 
-            //send the power to the motors
-            robot.frontLeftMotor.setPower(frontLeft);
-            robot.backLeftMotor.setPower(backLeft);
-            robot.backRightMotor.setPower(backRight);
-            robot.frontRightMotor.setPower(frontRight);
+
+
+        telemetry.addData("front left", "%.2f", frontLeft);
+        telemetry.addData("front right", "%.2f", frontRight);
+        telemetry.addData("back left", "%.2f", backLeft);
+        telemetry.addData("back right", "%.2f", backRight);
+
+        telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
+        telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+
+        telemetry.update();
+
+        //send the power to the motors
+        robot.frontLeftMotor.setPower(frontLeft);
+        robot.backLeftMotor.setPower(backLeft);
+        robot.backRightMotor.setPower(backRight);
+        robot.frontRightMotor.setPower(frontRight);
 
 
 
         }
 
-    }
+        }
 
 
-    //rotates to the given heading
-    void rotateToHeading(double heading){
+        //rotates to the given heading
+        void rotateToHeading(double heading){
 
         Orientation currentOrient;
         currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -594,25 +594,25 @@ public class Auto extends LinearOpMode {
 
         for (double i = .3; i > .1; i = i-.1) {
 
-            blindRotateRight(i);
-            while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) > heading) && opModeIsActive()) {
+        blindRotateRight(i);
+        while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) > heading) && opModeIsActive()) {
 
-                currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
-                telemetry.addData("target heading", heading);
-                telemetry.update();
-            }
-            stopDriving();
+        currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
+        telemetry.addData("target heading", heading);
+        telemetry.update();
+        }
+        stopDriving();
 
-            blindRotateLeft(i);
-            while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) < heading) && opModeIsActive()) {
+        blindRotateLeft(i);
+        while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) < heading) && opModeIsActive()) {
 
-                currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
-                telemetry.addData("target heading", heading);
-                telemetry.update();
-            }
-            stopDriving();
+        currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
+        telemetry.addData("target heading", heading);
+        telemetry.update();
+        }
+        stopDriving();
         }
 
 
@@ -620,10 +620,10 @@ public class Auto extends LinearOpMode {
         blindRotateRight(.175);
         while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) > heading) && opModeIsActive()) {
 
-            currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
-            telemetry.addData("target heading", heading);
-            telemetry.update();
+        currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
+        telemetry.addData("target heading", heading);
+        telemetry.update();
         }
         stopDriving();
 
@@ -632,20 +632,20 @@ public class Auto extends LinearOpMode {
 
         blindRotateLeft(.175);
         while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) < heading) && opModeIsActive()) {
-            currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
-            telemetry.addData("target heading", heading);
-            telemetry.update();
+        currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        telemetry.addData("current heading", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));
+        telemetry.addData("target heading", heading);
+        telemetry.update();
         }
         stopDriving();
-    }
+        }
 
 
 
 
 
-    //just rotates to the right
-    void blindRotateRight(double pwr){
+        //just rotates to the right
+        void blindRotateRight(double pwr){
         pwr = -pwr; // -pwr on all wheels turns right
         // Set power on each wheel
         robot.frontLeftMotor.setPower(pwr);
@@ -653,161 +653,161 @@ public class Auto extends LinearOpMode {
         robot.backLeftMotor.setPower(pwr);
         robot.backRightMotor.setPower(pwr);
 
-    }
+        }
 
-    //just rotates to the left
-    void blindRotateLeft(double pwr){
+        //just rotates to the left
+        void blindRotateLeft(double pwr){
 
         robot.frontLeftMotor.setPower(pwr);
         robot.frontRightMotor.setPower(pwr);
         robot.backLeftMotor.setPower(pwr);
         robot.backRightMotor.setPower(pwr);
 
-    }
+        }
 //end of Graham Addition
 
 
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
-    void wobbleUp() {
+        void wobbleUp() {
         robot.tiltServo.setPosition(0);
-    }
+        }
 
-    void wobbleDown(){
+        void wobbleDown(){
         robot.tiltServo.setPosition(1);
-    }
+        }
 
-    void wobbleOpen() {
+        void wobbleOpen() {
         robot.wobbleServo.setPosition(1);
-    }
+        }
 
-    void wobbleClose() {
+        void wobbleClose() {
         robot.wobbleServo.setPosition(0);
-    }
+        }
 
-    void wobbleDrop() {
+        void wobbleDrop() {
         wobbleDown();
         wobbleOpen();
         telemetry.addData("Wobble goal delivered", 0);
         telemetry.update();
-    }
+        }
 
-    void wobbleRaise() {
+        void wobbleRaise() {
         wobbleClose();
         wobbleUp();
         telemetry.addData("Wobble goal up", 0);
         telemetry.update();
-    }
+        }
 
-    //Scan Function_______________________________________________________________________________________________________________
+        //Scan Function_______________________________________________________________________________________________________________
 
         public static class SkystoneDeterminationPipeline extends OpenCvPipeline
         {
-            /*
-             * An enum to define the skystone position
-             */
-            public enum RingPosition
-            {
-                FOUR,
-                ONE,
-                NONE
-            }
+        /*
+         * An enum to define the skystone position
+         */
+        public enum RingPosition
+        {
+        FOUR,
+        ONE,
+        NONE
+        }
 
-            /*
-             * Some color constants
-             */
-            static final Scalar BLUE = new Scalar(0, 0, 255);
-            static final Scalar GREEN = new Scalar(0, 255, 0);
+        /*
+         * Some color constants
+         */
+        static final Scalar BLUE = new Scalar(0, 0, 255);
+        static final Scalar GREEN = new Scalar(0, 255, 0);
 
-            /*
-             * The core values which define the location and size of the sample regions
-             */
-            static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98); //Change these to match up with where rings will be depending on phone placement
+        /*
+         * The core values which define the location and size of the sample regions
+         */
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98); //Change these to match up with where rings will be depending on phone placement
 
-            static final int REGION_WIDTH = 35;
-            static final int REGION_HEIGHT = 25;
+        static final int REGION_WIDTH = 35;
+        static final int REGION_HEIGHT = 25;
 
-            final int FOUR_RING_THRESHOLD = 150; //Change these thresholds depending on our values
-            final int ONE_RING_THRESHOLD = 135;
+        final int FOUR_RING_THRESHOLD = 150; //Change these thresholds depending on our values
+        final int ONE_RING_THRESHOLD = 135;
 
-            Point region1_pointA = new Point(
-                    REGION1_TOPLEFT_ANCHOR_POINT.x,
-                    REGION1_TOPLEFT_ANCHOR_POINT.y);
-            Point region1_pointB = new Point(
-                    REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                    REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+        Point region1_pointA = new Point(
+        REGION1_TOPLEFT_ANCHOR_POINT.x,
+        REGION1_TOPLEFT_ANCHOR_POINT.y);
+        Point region1_pointB = new Point(
+        REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+        REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
-            /*
-             * Working variables
-             */
-            Mat region1_Cb;
-            Mat YCrCb = new Mat();
-            Mat Cb = new Mat();
-            int avg1;
+        /*
+         * Working variables
+         */
+        Mat region1_Cb;
+        Mat YCrCb = new Mat();
+        Mat Cb = new Mat();
+        int avg1;
 
-            // Volatile since accessed by OpMode thread w/o synchronization
-            private volatile RingPosition position = RingPosition.FOUR;
+        // Volatile since accessed by OpMode thread w/o synchronization
+        private volatile RingPosition position = RingPosition.FOUR;
 
-            /*
-             * This function takes the RGB frame, converts to YCrCb,
-             * and extracts the Cb channel to the 'Cb' variable
-             */
-            void inputToCb(Mat input)
-            {
-                Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-                Core.extractChannel(YCrCb, Cb, 1);
-            }
+        /*
+         * This function takes the RGB frame, converts to YCrCb,
+         * and extracts the Cb channel to the 'Cb' variable
+         */
+        void inputToCb(Mat input)
+        {
+        Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+        Core.extractChannel(YCrCb, Cb, 1);
+        }
 
-            @Override
-            public void init(Mat firstFrame)
-            {
-                inputToCb(firstFrame);
+        @Override
+        public void init(Mat firstFrame)
+        {
+        inputToCb(firstFrame);
 
-                region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
-            }
+        region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+        }
 
-            @Override
-            public Mat processFrame(Mat input)
-            {
-                inputToCb(input);
+        @Override
+        public Mat processFrame(Mat input)
+        {
+        inputToCb(input);
 
-                avg1 = (int) Core.mean(region1_Cb).val[0];
+        avg1 = (int) Core.mean(region1_Cb).val[0];
 
-                Imgproc.rectangle(
-                        input, // Buffer to draw on
-                        region1_pointA, // First point which defines the rectangle
-                        region1_pointB, // Second point which defines the rectangle
-                        BLUE, // The color the rectangle is drawn in
-                        2); // Thickness of the rectangle lines
+        Imgproc.rectangle(
+        input, // Buffer to draw on
+        region1_pointA, // First point which defines the rectangle
+        region1_pointB, // Second point which defines the rectangle
+        BLUE, // The color the rectangle is drawn in
+        2); // Thickness of the rectangle lines
 
-                position = RingPosition.FOUR; // Record our analysis
-                if(avg1 > FOUR_RING_THRESHOLD){
-                    position = RingPosition.FOUR;
-                }else if (avg1 > ONE_RING_THRESHOLD){
-                    position = RingPosition.ONE;
-                }else{
-                    position = RingPosition.NONE;
-                }
+        position = RingPosition.FOUR; // Record our analysis
+        if(avg1 > FOUR_RING_THRESHOLD){
+        position = RingPosition.FOUR;
+        }else if (avg1 > ONE_RING_THRESHOLD){
+        position = RingPosition.ONE;
+        }else{
+        position = RingPosition.NONE;
+        }
 
-                Imgproc.rectangle(
-                        input, // Buffer to draw on
-                        region1_pointA, // First point which defines the rectangle
-                        region1_pointB, // Second point which defines the rectangle
-                        GREEN, // The color the rectangle is drawn in
-                        -1); // Negative thickness means solid fill
+        Imgproc.rectangle(
+        input, // Buffer to draw on
+        region1_pointA, // First point which defines the rectangle
+        region1_pointB, // Second point which defines the rectangle
+        GREEN, // The color the rectangle is drawn in
+        -1); // Negative thickness means solid fill
 
-                return input;
-            }
+        return input;
+        }
 
-            public int getAnalysis()
-            {
-                return avg1;
-            }
+        public int getAnalysis()
+        {
+        return avg1;
+        }
         }
 
 
 
-    void wobblePosition(){
+        void wobblePosition(){
         if (NONE) {
         }
 
@@ -819,39 +819,51 @@ public class Auto extends LinearOpMode {
 
         }
 
-    }
+        }
 
-    void positionRobot(){
+        void positionRobot(){
         //drive up to rings
-    }
+        }
 
-    void park(){
+        void park(){
         //park over white line
-    }
+        }
 
-    void launchRing(){
+        void launchRing(){
         //to powershot
-    }
+        }
 
-    //Blinkin Function_______________________________________________________________________________________________________________
-    void initializeWhiteLight(){
+        //Blinkin Function_______________________________________________________________________________________________________________
+        void initializeWhiteLight(){
         robot.pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
         robot.blinkinLedDriver.setPattern(robot.pattern);
-    }
+        }
 
 
 
 
-    //----------------------------------------------------------------------------------------------
-    // Formatting
-    //----------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------
+        // Formatting
+        //----------------------------------------------------------------------------------------------
 
-    String formatAngle(AngleUnit angleUnit, double angle){
+        String formatAngle(AngleUnit angleUnit, double angle){
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
+        }
 
-    String formatDegrees(double degrees) {
+        String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
+        }
 
-}
+        }
+        © 2021 GitHub, Inc.
+        Terms
+        Privacy
+        Security
+        Status
+        Docs
+        Contact GitHub
+        Pricing
+        API
+        Training
+        Blog
+        About
