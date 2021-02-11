@@ -808,21 +808,30 @@ public class Auto extends LinearOpMode {
 
 
     void wobblePosition(){
-        if (A/NONE){
+        if (NONE) {
+        }
+
+        if (ONE){
 
         }
 
-        if (B/ONE){
-
-        }
-
-        if (C/FOUR){
+        if (FOUR){
 
         }
 
     }
 
+    void positionRobot(){
+        //drive up to rings
+    }
 
+    void park(){
+        //park over white line
+    }
+
+    void launchRing(){
+        //to powershot
+    }
 
     //Blinkin Function_______________________________________________________________________________________________________________
     void initializeWhiteLight(){
