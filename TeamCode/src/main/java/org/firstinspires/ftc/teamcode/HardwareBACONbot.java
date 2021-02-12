@@ -65,12 +65,12 @@ public class HardwareBACONbot
 
     public DcMotor intakeMotor = null;
     public DcMotor launchMotor = null;
+    public DcMotor tiltMotor = null;
 
     public DistanceSensor backDistance = null;
     //public DistanceSensor frontDistance = null;
 
     public Servo    wobbleServo = null;
-    public Servo    tiltServo = null;
     public Servo    feederServo = null;
 
     public RevBlinkinLedDriver blinkinLedDriver;
@@ -99,12 +99,12 @@ public class HardwareBACONbot
 
         launchMotor = hwMap.dcMotor.get("LM"); // Hub 2 motor port 0
         intakeMotor = hwMap.dcMotor.get("IM"); // Hub 2 motor port 1
+        tiltMotor = hwMap.dcMotor.get("TM")
 
         backDistance = hwMap.get(DistanceSensor.class, "bsr"); //hub2 port 2
         //frontDistance = hwMap.get(DistanceSensor.class, "fsr"); //hub2 port 2
 
         wobbleServo = hwMap.servo.get("wobble");
-        tiltServo = hwMap.servo.get("tilt");
         feederServo = hwMap.servo.get("feeder");
 
         blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
@@ -130,9 +130,9 @@ public class HardwareBACONbot
 
         launchMotor.setPower(0);
         intakeMotor.setPower(0);
+        tiltMotor.setPower(0);
 
         feederServo.setPosition(0);
-        tiltServo.setPosition(0);
         wobbleServo.setPosition(0);
 
         // Set all motors to run without encoders.
