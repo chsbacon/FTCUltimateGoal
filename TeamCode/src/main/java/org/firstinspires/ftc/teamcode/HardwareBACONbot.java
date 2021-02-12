@@ -143,10 +143,11 @@ public class HardwareBACONbot
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tiltMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tiltMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -155,6 +156,7 @@ public class HardwareBACONbot
 
         launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
