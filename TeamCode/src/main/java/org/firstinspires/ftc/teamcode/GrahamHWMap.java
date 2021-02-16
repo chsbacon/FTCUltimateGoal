@@ -36,9 +36,11 @@ public class GrahamHWMap {
 
     public DcMotor  intakeMotor1 = null;
 
+    public DcMotor  wobbleMotor = null;
+
 
     public Servo    wobbleServo1 = null;
-    //public Servo    wobbleServo2 = null;
+
 
     public Servo    launcherServo = null;
 
@@ -73,10 +75,11 @@ public class GrahamHWMap {
 
         intakeMotor1 = hwMap.dcMotor.get("IM"); // H2 P1
 
+        wobbleMotor = hwMap.dcMotor.get("WM"); // H2 P2
 
 
         wobbleServo1 = hwMap.servo.get("WS1"); //H2 P0
-       // this needs to be a motor -- wobbleServo2 = hwMap.servo.get("WS2");
+
 
 
         launcherServo = hwMap.servo.get("LS"); //H2 P1
@@ -109,6 +112,8 @@ public class GrahamHWMap {
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 

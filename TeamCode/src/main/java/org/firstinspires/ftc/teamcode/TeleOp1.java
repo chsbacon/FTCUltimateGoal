@@ -70,13 +70,13 @@ public class TeleOp1 extends LinearOpMode {
         double intakeMotorPower = 0; //do not edit this
         double desiredIntakePower = .75; //edit this for the power you want the motor to spin at
 
-        // change the active and rest positions to change where each servo goes
-        double wobbleServoPosition = 0;
-        double WSactivePos1 = 0;
-        double WSactivePos2 = 0;
-        double WSrestPos1 = 0;
-        double WSrestPos2 = 0;
 
+
+        // change the active and rest positions to change where each servo goes
+        double WSactivePos1 = 0;
+        double WSrestPos1 = 0;
+        double WMpower = .25;  //change the motor up/down speed
+        long WMsleep = 1500;    // change how long we let the claw raise/lower in milliseconds
 
         double LServoPos = 0;
 
@@ -175,7 +175,7 @@ public class TeleOp1 extends LinearOpMode {
             // robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES
 
 // gamepad 1 - 111111111111111111111111111111111111111111
-            // driver
+            // driver - wobble
 
 
 
@@ -184,21 +184,66 @@ public class TeleOp1 extends LinearOpMode {
 
             }
 
-            // wobble servo button
-            // positions not yet calibrated -- all set to 0
-            if(gamepad1.x){
-                sleep(250);
-                if(wobbleServoPosition == 0){
-                    robot.wobbleServo1.setPosition(WSactivePos1);
-                    // robot.wobbleServo2.setPosition(WSactivePos2);
-                    wobbleServoPosition = 1;
-                }
-                if(wobbleServoPosition == 1){
-                    robot.wobbleServo1.setPosition(WSrestPos1);
-                    // robot.wobbleServo2.setPosition(WSrestPos2);
-                    wobbleServoPosition = 0;
-                }
+
+
+
+
+            // pick up wobble
+            if(gamepad1.left_bumper){
+
+                sleep(250); //sleep used to debounce button
+
+                //prep
+                robot.wobbleServo1.setPosition(WSrestPos1);   //open the claw
+                sleep(250);  //give 1/4 second for claw to open
+
+                //lowering
+                robot.wobbleMotor.setPower(WMpower);  //lower the lift
+                sleep(WMsleep);  //let the lift lower for WMsleep amount of time
+                robot.wobbleMotor.setPower(0); //stop the lift from lowering
+
+                //grabbing
+                robot.wobbleServo1.setPosition(WSactivePos1); //close the claw
+                sleep(500); //give 1/2 second for the claw to close
+
+                //raising
+                robot.wobbleMotor.setPower(-WMpower); //raise the lift
+                sleep(WMsleep); // let the lift raise for WMsleep amount of time
+                robot.wobbleMotor.setPower(0);  // stop the lift at the top
+
+
+                robot.wobbleServo1.setPosition(WSactivePos1); // make sure the claw is closed
+
             }
+
+
+            //put down wobble
+            if(gamepad1.right_bumper){
+
+                sleep(250);  //sleep used to debounce button
+
+                //prep
+                robot.wobbleServo1.setPosition(WSactivePos1);  //make sure the claw is close
+                sleep(250); //give 1/4 second to make sure claw is closed
+
+                //lowering
+                robot.wobbleMotor.setPower(WMpower);  //lower claw
+                sleep(WMsleep); // let claw lower for WMsleep amount of time
+                robot.wobbleMotor.setPower(0);
+
+                //letting go
+                robot.wobbleServo1.setPosition(WSrestPos1); //open claw
+                sleep(250); // let claw open
+
+                //raising
+                robot.wobbleMotor.setPower(-WMpower); //raise claw
+                sleep(WMsleep); //raise claw for Wmsleep amount of time
+                robot.wobbleMotor.setPower(0); //stop motor at top
+
+            }
+
+            robot.wobbleMotor.setPower(0);
+
 
             if(gamepad1.b){
 
@@ -206,17 +251,12 @@ public class TeleOp1 extends LinearOpMode {
 
 
 
-
-            if(gamepad1.right_bumper){
-
-            }
-
-            if(gamepad1.left_bumper){
+            if(gamepad1.x){
 
             }
 
 // gamepad 2 - 22222222222222222222222222222222222222
-            // shooter
+            // shooter collector
 
             //intake motor
             if(gamepad2.a){
