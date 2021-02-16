@@ -180,7 +180,7 @@
 
         //Wobble grabber position
         robot.wobbleServo.setPosition(grabPos);
-        robot.tiltServo.setPosition(upTilt);
+        robot.tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
         runtime.reset();
@@ -306,10 +306,10 @@
 
         //Drive Forwards Slow- Towards where the Backsensor is facing
         void driveForwardSlow() {
-        robot.frontLeftMotor.setPower(SLOW_SPEED);
-        robot.backLeftMotor.setPower(SLOW_SPEED);
-        robot.backRightMotor.setPower(-1 * SLOW_SPEED);
-        robot.frontRightMotor.setPower(-1 * SLOW_SPEED);
+        robot.frontLeftMotor.setPower(0.3);
+        robot.backLeftMotor.setPower(0.3);
+        robot.backRightMotor.setPower(-0.3);
+        robot.frontRightMotor.setPower(-0.3);
         }
 
 
@@ -670,15 +670,16 @@
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
         void wobbleUp() {
-        robot.tiltServo.setPosition(0);
+                robot.tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         void wobbleDown(){
-        robot.tiltServo.setPosition(1);
+                robot.tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         void wobbleOpen() {
-        robot.wobbleServo.setPosition(1);
+
+                robot.wobbleServo.setPosition(1);
         }
 
         void wobbleClose() {
