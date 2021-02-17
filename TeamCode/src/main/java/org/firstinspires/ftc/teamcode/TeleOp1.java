@@ -272,10 +272,10 @@ public class TeleOp1 extends LinearOpMode {
             }
 
             if((gamepad2.a) && (gamepad2.left_bumper)){
-                robot.intakeMotor1.setPower(-desiredIntakePower);
+                robot.intakeMotor.setPower(-desiredIntakePower);
             }
 
-            robot.intakeMotor1.setPower(intakeMotorPower);
+            robot.intakeMotor.setPower(intakeMotorPower);
 
 
             //launcher motor
