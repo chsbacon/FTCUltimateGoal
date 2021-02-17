@@ -81,7 +81,7 @@ public class TeleOp1 extends LinearOpMode {
         double LServoPos = 0;
 
         // change the active and rest positions to change where the servo goes
-        double launcherServoPosition = 0;
+        double feederServoPosition = 0;
         double LSactivePos = 90;
         double LSrestPos = 0;
 
@@ -295,11 +295,11 @@ public class TeleOp1 extends LinearOpMode {
 
 
             if(gamepad2.b){
-                robot.launcherServo.setPosition(LSrestPos);
+                robot.feederServo.setPosition(LSrestPos);
                 sleep(250);
             }
             if(gamepad2.y){
-                robot.launcherServo.setPosition(LSactivePos);
+                robot.feederServo.setPosition(LSactivePos);
                 sleep(250);
             }
 
