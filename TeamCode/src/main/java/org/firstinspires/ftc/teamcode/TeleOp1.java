@@ -1,4 +1,6 @@
 
+
+
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
@@ -58,27 +60,33 @@ public class TeleOp1 extends LinearOpMode {
         double interval = 25;  //was 75 // how often to update
         double lastSpeedTime = runtime.milliseconds();
 
-        double max;
+        double max; //
 
         double launchMotorStatus = 0; // do not edit this
         double launchMotorPower = 0; //do not edit this
-        double desiredLaunchPower = .85; // edit this for the power you want to motor to spin at
+        double desiredLaunchPower = .75; // edit this for the power you want to motor to spin at
 
         double intakeMotorStatus = 0; //do not edit this
         double intakeMotorPower = 0; //do not edit this
-        double desiredIntakePower = .7; //edit this for the power you want the motor to spin at
+        double desiredIntakePower = .75; //edit this for the power you want the motor to spin at
+
+
 
         // change the active and rest positions to change where each servo goes
-        double wobbleServoPosition = 0;
         double WSactivePos1 = 0;
-        double WSactivePos2 = 0;
         double WSrestPos1 = 0;
-        double WSrestPos2 = 0;
+        double WMpower = .25;  //change the motor up/down speed
+        long WMsleep = 1500;    // change how long we let the claw raise/lower in milliseconds
+
+        double LServoPos = 0;
 
         // change the active and rest positions to change where the servo goes
-        double launcherServoPosition = 0;
-        double LSactivePos = 0;
+        double feederServoPosition = 0;
+        double LSactivePos = 90;
         double LSrestPos = 0;
+
+        // this should be the heading of the goals, relative to the robot start
+        double GoalHeading = 90;
 
         Orientation targOrientMain;
         targOrientMain = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -168,55 +176,95 @@ public class TeleOp1 extends LinearOpMode {
             // robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES
 
 // gamepad 1 - 111111111111111111111111111111111111111111
-            // driver launcher
+            // driver - wobble
 
 
-            if (gamepad1.a){
-                sleep(250);
-                if(launcherServoPosition == 0){
-                    robot.launcherServo.setPosition(LSactivePos);
-                    launcherServoPosition = 1;
-                }
-                if(launcherServoPosition == 1){
-                    robot.launcherServo.setPosition(LSrestPos);
-                    launcherServoPosition = 0;
-                }
-            }
 
-            if(gamepad1.x){
+            if(gamepad1.a){
+
 
             }
 
-            if(gamepad1.b){
 
-            }
-
-            //launcher motor
-            // turns the launcher motor on or off
+            // rotate to the heading of the goals -- used to line up shots
             if(gamepad1.y){
                 sleep(250);
-                if (launchMotorStatus == 0){ //if motor off
-                    launchMotorPower = desiredLaunchPower;  //turn motor on
-                    launchMotorStatus = 1;  // motor is on
-                }
-                else if (launchMotorStatus == 1){ // if motor on
-                    launchMotorPower = 0;       // turn motor off
-                    launchMotorStatus = 0;      // motor is off
-                }
-            }
-            robot.launcherMotor.setPower(launchMotorPower);
-
-
-            if(gamepad1.right_bumper){
-
+                rotateToHeading(GoalHeading);
             }
 
+
+
+
+
+            // pick up wobble
             if(gamepad1.left_bumper){
 
+                sleep(250); //sleep used to debounce button
+
+                //prep
+                robot.wobbleServo.setPosition(WSrestPos1);   //open the claw
+                sleep(250);  //give 1/4 second for claw to open
+
+                //lowering
+                robot.wobbleMotor.setPower(WMpower);  //lower the lift
+                sleep(WMsleep);  //let the lift lower for WMsleep amount of time
+                robot.wobbleMotor.setPower(0); //stop the lift from lowering
+
+                //grabbing
+                robot.wobbleServo.setPosition(WSactivePos1); //close the claw
+                sleep(500); //give 1/2 second for the claw to close
+
+                //raising
+                robot.wobbleMotor.setPower(-WMpower); //raise the lift
+                sleep(WMsleep); // let the lift raise for WMsleep amount of time
+                robot.wobbleMotor.setPower(0);  // stop the lift at the top
+
+
+                robot.wobbleServo.setPosition(WSactivePos1); // make sure the claw is closed
+
+            }
+
+
+            //put down wobble
+            if(gamepad1.right_bumper){
+
+                sleep(250);  //sleep used to debounce button
+
+                //prep
+                robot.wobbleServo.setPosition(WSactivePos1);  //make sure the claw is close
+                sleep(250); //give 1/4 second to make sure claw is closed
+
+                //lowering
+                robot.wobbleMotor.setPower(WMpower);  //lower claw
+                sleep(WMsleep); // let claw lower for WMsleep amount of time
+                robot.wobbleMotor.setPower(0);
+
+                //letting go
+                robot.wobbleServo.setPosition(WSrestPos1); //open claw
+                sleep(250); // let claw open
+
+                //raising
+                robot.wobbleMotor.setPower(-WMpower); //raise claw
+                sleep(WMsleep); //raise claw for Wmsleep amount of time
+                robot.wobbleMotor.setPower(0); //stop motor at top
+
+            }
+
+            robot.wobbleMotor.setPower(0);
+
+
+            if(gamepad1.b){
+                    strafeLeft(.3,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+            }
+
+
+
+            if(gamepad1.x){
+                    strafeRight(.3,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
             }
 
 // gamepad 2 - 22222222222222222222222222222222222222
-            // grabber collector
+            // shooter collector
 
             //intake motor
             if(gamepad2.a){
@@ -230,24 +278,37 @@ public class TeleOp1 extends LinearOpMode {
                     intakeMotorStatus = 0; //motor is off
                 }
             }
-            robot.intakeMotor1.setPower(intakeMotorPower);
-            robot.intakeMotor2.setPower(-intakeMotorPower);
+
+            if((gamepad2.a) && (gamepad2.left_bumper)){
+                robot.intakeMotor.setPower(-desiredIntakePower);
+            }
+
+            robot.intakeMotor.setPower(intakeMotorPower);
 
 
-            // wobble servo button
-            // positions not yet calibrated -- all set to 0
+            //launcher motor
+            // turns the launcher motor on or off
             if(gamepad2.x){
                 sleep(250);
-                if(wobbleServoPosition == 0){
-                    robot.wobbleServo1.setPosition(WSactivePos1);
-                    robot.wobbleServo2.setPosition(WSactivePos2);
-                    wobbleServoPosition = 1;
+                if (launchMotorStatus == 0){ //if motor off
+                    launchMotorPower = desiredLaunchPower;  //turn motor on
+                    launchMotorStatus = 1;  // motor is on
                 }
-                if(wobbleServoPosition == 1){
-                    robot.wobbleServo1.setPosition(WSrestPos1);
-                    robot.wobbleServo1.setPosition(WSrestPos2);
-                    wobbleServoPosition = 0;
+                else if (launchMotorStatus == 1){ // if motor on
+                    launchMotorPower = 0;       // turn motor off
+                    launchMotorStatus = 0;      // motor is off
                 }
+            }
+            robot.launchMotor.setPower(launchMotorPower);
+
+
+            if(gamepad2.b){
+                robot.feederServo.setPosition(LSrestPos);
+                sleep(250);
+            }
+            if(gamepad2.y){
+                robot.feederServo.setPosition(LSactivePos);
+                sleep(250);
             }
 
 
@@ -458,6 +519,101 @@ public class TeleOp1 extends LinearOpMode {
 
     }
 
+
+
+    //strafes left at the heading it was called at
+    void strafeRight(double pwr, Orientation target) {
+
+        //orients
+        Orientation targetOrient;
+        Orientation currOrient;
+
+        //converts the target heading to a double to use in error calculation
+        targetOrient = target;
+        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);
+
+        //rChanger changes the sensitivity of the R value
+        double rChanger = 10;
+        double frontLeft, frontRight, backLeft, backRight, max;
+
+
+        while((opModeIsActive()) && (gamepad1.x)){
+
+            //gamepad.x is here as that is the button I've been pressing to test this function
+            //if you want to have this run properly, you'll need to replace gamepad.x with some other qualifier t
+            // that will stop the while loop at some point, some way
+
+
+            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
+
+            double error = targAng - currAng;
+
+
+            double r = (-error / 180) / (rChanger * pwr);
+            //double r = (-error/180);
+            //r = 0;
+            //r=-r;
+
+            if ((r < .07) && (r > 0)) {
+                r = .07;
+            } else if ((r > -.07) && (r < 0)) {
+                r = -.07;
+            }
+
+
+            // Normalize the values so none exceeds +/- 1.0
+            frontLeft = -pwr + r ;
+            backLeft = pwr + r ;
+            backRight = pwr + r ;
+            frontRight = -pwr + r ;
+
+            //original
+            // +    +
+            // -    +
+            // -    +
+            // +    +
+
+
+            //strafe right
+            // -    +
+            // +    +
+            // +    +
+            // -    +
+
+            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
+            if (max > 1.0) {
+                frontLeft = frontLeft / max;
+                frontRight = frontRight / max;
+                backLeft = backLeft / max;
+                backRight = backRight / max;
+            }
+
+
+
+            telemetry.addData("front left", "%.2f", frontLeft);
+            telemetry.addData("front right", "%.2f", frontRight);
+            telemetry.addData("back left", "%.2f", backLeft);
+            telemetry.addData("back right", "%.2f", backRight);
+
+            telemetry.addData("error", error);
+
+            telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
+            telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+
+            telemetry.update();
+
+            //send the power to the motors
+            robot.frontLeftMotor.setPower(frontLeft);
+            robot.backLeftMotor.setPower(backLeft);
+            robot.backRightMotor.setPower(backRight);
+            robot.frontRightMotor.setPower(frontRight);
+
+
+        }
+
+
+    }
 
 
     //kills power ot all wheels
