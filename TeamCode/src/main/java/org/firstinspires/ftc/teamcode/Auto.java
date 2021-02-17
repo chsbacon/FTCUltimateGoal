@@ -121,7 +121,7 @@
 
         double lastTime = runtime.milliseconds();
 
-        // wobbleServo and tiltServo states
+        // wobbleServo and wobbleMotor states
         float grabPos = 0;
         float freePos = 1;
         float upTilt = 0;
