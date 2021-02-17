@@ -99,13 +99,13 @@ public class HardwareBACONbot
 
         launchMotor = hwMap.dcMotor.get("LM"); // Hub 2 motor port 0
         intakeMotor = hwMap.dcMotor.get("IM"); // Hub 2 motor port 1
-        tiltMotor = hwMap.dcMotor.get("TM")
+        wobbleMotor = hwMap.dcMotor.get("WM")
 
         backDistance = hwMap.get(DistanceSensor.class, "bsr"); //hub2 port 2
         //frontDistance = hwMap.get(DistanceSensor.class, "fsr"); //hub2 port 2
 
-        wobbleServo = hwMap.servo.get("wobble");
-        feederServo = hwMap.servo.get("feeder");
+        wobbleServo = hwMap.servo.get("WS");
+        feederServo = hwMap.servo.get("FS");
 
         blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
 
@@ -130,33 +130,42 @@ public class HardwareBACONbot
 
         launchMotor.setPower(0);
         intakeMotor.setPower(0);
-        tiltMotor.setPower(0);
+        wobbleMotor.setPower(0);
 
         feederServo.setPosition(0);
         wobbleServo.setPosition(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        //
-
+        
+        //Reverse direction for drive motors 
+        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+       
+        //Setup for motors without encoders 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        
+        //Setup for motors with encoders 
+        wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        tiltMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tiltMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        //Brake drive motors
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        
+        //Brake additional motors 
         launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        tiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
