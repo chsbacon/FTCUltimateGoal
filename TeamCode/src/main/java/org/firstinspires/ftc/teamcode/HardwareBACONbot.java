@@ -65,7 +65,7 @@ public class HardwareBACONbot
 
     public DcMotor intakeMotor = null;
     public DcMotor launchMotor = null;
-    public DcMotor tiltMotor = null;
+    public DcMotor wobbleMotor = null;
 
     public DistanceSensor backDistance = null;
     //public DistanceSensor frontDistance = null;
