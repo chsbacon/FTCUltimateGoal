@@ -194,7 +194,7 @@ public class TeleOp1 extends LinearOpMode {
                 sleep(250); //sleep used to debounce button
 
                 //prep
-                robot.wobbleServo1.setPosition(WSrestPos1);   //open the claw
+                robot.wobbleServo.setPosition(WSrestPos1);   //open the claw
                 sleep(250);  //give 1/4 second for claw to open
 
                 //lowering
@@ -203,7 +203,7 @@ public class TeleOp1 extends LinearOpMode {
                 robot.wobbleMotor.setPower(0); //stop the lift from lowering
 
                 //grabbing
-                robot.wobbleServo1.setPosition(WSactivePos1); //close the claw
+                robot.wobbleServo.setPosition(WSactivePos1); //close the claw
                 sleep(500); //give 1/2 second for the claw to close
 
                 //raising
@@ -212,7 +212,7 @@ public class TeleOp1 extends LinearOpMode {
                 robot.wobbleMotor.setPower(0);  // stop the lift at the top
 
 
-                robot.wobbleServo1.setPosition(WSactivePos1); // make sure the claw is closed
+                robot.wobbleServo.setPosition(WSactivePos1); // make sure the claw is closed
 
             }
 
@@ -223,7 +223,7 @@ public class TeleOp1 extends LinearOpMode {
                 sleep(250);  //sleep used to debounce button
 
                 //prep
-                robot.wobbleServo1.setPosition(WSactivePos1);  //make sure the claw is close
+                robot.wobbleServo.setPosition(WSactivePos1);  //make sure the claw is close
                 sleep(250); //give 1/4 second to make sure claw is closed
 
                 //lowering
@@ -232,7 +232,7 @@ public class TeleOp1 extends LinearOpMode {
                 robot.wobbleMotor.setPower(0);
 
                 //letting go
-                robot.wobbleServo1.setPosition(WSrestPos1); //open claw
+                robot.wobbleServo.setPosition(WSrestPos1); //open claw
                 sleep(250); // let claw open
 
                 //raising
