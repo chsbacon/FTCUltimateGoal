@@ -188,6 +188,7 @@ public class TeleOp1 extends LinearOpMode {
 
             // rotate to the heading of the goals -- used to line up shots
             if(gamepad1.y){
+                sleep(250);
                 rotateToHeading(GoalHeading);
             }
 
