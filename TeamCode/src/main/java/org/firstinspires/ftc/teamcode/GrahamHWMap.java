@@ -32,29 +32,24 @@ public class GrahamHWMap {
     public DcMotor  backLeftMotor    = null;
     public DcMotor  backRightMotor   = null;
 
-    public DcMotor  launcherMotor = null;
-
-    public DcMotor  intakeMotor1 = null;
-
+    public DcMotor  launchMotor = null;
+    public DcMotor  intakeMotor = null;
     public DcMotor  wobbleMotor = null;
 
+    public DistanceSensor backDistance = null; 
 
-    public Servo    wobbleServo1 = null;
+    public Servo    wobbleServo = null;
+    public Servo    feederServo = null;
 
-
-
-    public Servo    launcherServo = null;
-
-
-    public DistanceSensor backDistance = null;
-
+    public RevBlinkinLedDriver blinkinLedDriver;
+    public RevBlinkinLedDriver.BlinkinPattern pattern;
 
     public BNO055IMU imu;
 
 
     /* local OpMode members. */
     private HardwareMap hwMap = null;
-
+    private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
     public GrahamHWMap() {
@@ -64,56 +59,67 @@ public class GrahamHWMap {
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
+        
+        //Drive Motors:
         frontLeftMotor  = hwMap.dcMotor.get("FL"); // H1 0 - motor port
         frontRightMotor = hwMap.dcMotor.get("FR"); // H1 1
         backLeftMotor   = hwMap.dcMotor.get("BL"); // H1 2
         backRightMotor  = hwMap.dcMotor.get("BR"); // H1 3
 
-
-        launcherMotor = hwMap.dcMotor.get("LM"); // H2 P0
-
-
-        intakeMotor1 = hwMap.dcMotor.get("IM"); // H2 P1
-
+        //Additional Motors:
+        launchMotor = hwMap.dcMotor.get("LM"); // H2 P0
+        intakeMotor = hwMap.dcMotor.get("IM"); // H2 P1
         wobbleMotor = hwMap.dcMotor.get("WM"); // H2 P2
 
-
-        wobbleServo1 = hwMap.servo.get("WS1"); //H2 P0
-       // this needs to be a motor -- wobbleServo2 = hwMap.servo.get("WS2");
-
-
-        launcherServo = hwMap.servo.get("LS"); //H2 P1
+        //Servos:
+        wobbleServo = hwMap.servo.get("WS"); //H2 P0
+        feederServo = hwMap.servo.get("FS"); //H2 P1
 
         backDistance = hwMap.get(DistanceSensor.class, "bsr");
+        
+        blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
 
-
+        //Setting all motor to zero power
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
+        
+        launchMotor.setPower(0);
+        intakeMotor.setPower(0);
+        wobbleMotor.setPower(0);
 
+        feederServo.setPosition(0);
+        wobbleServo.setPosition(0);
+        
+        
+        //Reverse direction for drive motors 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
+        //Setup for motors without encoders 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
+        launchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        
+        //Setup for motors with encoders 
+        wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
+        //Brake drive motors 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
-        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        intakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        //Brake additional Motors 
+        launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
