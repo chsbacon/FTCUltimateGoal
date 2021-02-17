@@ -85,7 +85,8 @@ public class TeleOp1 extends LinearOpMode {
         double LSactivePos = 90;
         double LSrestPos = 0;
 
-
+        // this should be the heading of the goals, relative to the robot start
+        double GoalHeading = 90;
 
         Orientation targOrientMain;
         targOrientMain = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -182,6 +183,12 @@ public class TeleOp1 extends LinearOpMode {
             if(gamepad1.a){
 
 
+            }
+
+
+            // rotate to the heading of the goals -- used to line up shots
+            if(gamepad1.y){
+                rotateToHeading(GoalHeading);
             }
 
 
