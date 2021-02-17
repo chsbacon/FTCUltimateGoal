@@ -180,7 +180,7 @@
 
         //Wobble grabber position
         robot.wobbleServo.setPosition(grabPos);
-        robot.tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
         runtime.reset();
@@ -670,11 +670,11 @@
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
         void wobbleUp() {
-                robot.tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         void wobbleDown(){
-                robot.tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         void wobbleOpen() {
