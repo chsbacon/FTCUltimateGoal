@@ -99,7 +99,7 @@ public class HardwareBACONbot
 
         launchMotor = hwMap.dcMotor.get("LM"); // Hub 2 motor port 0
         intakeMotor = hwMap.dcMotor.get("IM"); // Hub 2 motor port 1
-        wobbleMotor = hwMap.dcMotor.get("WM")
+        wobbleMotor = hwMap.dcMotor.get("WM");
 
         backDistance = hwMap.get(DistanceSensor.class, "bsr"); //hub2 port 2
         //frontDistance = hwMap.get(DistanceSensor.class, "fsr"); //hub2 port 2

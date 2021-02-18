@@ -180,7 +180,7 @@ public class AutoEdit extends LinearOpMode {
 
         //Wobble grabber position
         robot.wobbleServo.setPosition(grabPos);
-        robot.tiltServo.setPosition(upTilt);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);;
 
         waitForStart();
         runtime.reset();
@@ -672,11 +672,11 @@ public class AutoEdit extends LinearOpMode {
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
     void wobbleUp() {
-        robot.tiltServo.setPosition(0);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void wobbleDown(){
-        robot.tiltServo.setPosition(1);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void wobbleOpen() {
