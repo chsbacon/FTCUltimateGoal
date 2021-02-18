@@ -41,8 +41,8 @@ public class GrahamHWMap {
     public Servo    wobbleServo = null;
     public Servo    feederServo = null;
 
-    public RevBlinkinLedDriver blinkinLedDriver;
-    public RevBlinkinLedDriver.BlinkinPattern pattern;
+    //public RevBlinkinLedDriver blinkinLedDriver;
+    //public RevBlinkinLedDriver.BlinkinPattern pattern;
 
     public BNO055IMU imu;
 
@@ -77,7 +77,7 @@ public class GrahamHWMap {
 
         backDistance = hwMap.get(DistanceSensor.class, "bsr");
 
-        blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
+        //blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
 
         //Setting all motor to zero power
         frontLeftMotor.setPower(0);
