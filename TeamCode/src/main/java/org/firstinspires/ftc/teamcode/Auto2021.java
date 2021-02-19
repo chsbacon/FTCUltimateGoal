@@ -174,7 +174,7 @@ public class Auto2021 extends LinearOpMode {
 
         //Wobble grabber position
         robot.wobbleServo.setPosition(grabPos);
-        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
         runtime.reset();
@@ -184,7 +184,7 @@ public class Auto2021 extends LinearOpMode {
         telemetry.addData("Position", pipeline.position);
         telemetry.update();
         // Don't burn CPU cycles busy-looping in this sample
-        sleep(50);
+        sleep(500);
 
         // run until the end of the match (when driver presses STOP)
 
@@ -211,6 +211,9 @@ public class Auto2021 extends LinearOpMode {
         }
         if ((task == fullRun) && (teamcolor == blue)) {
             //This gets the robot in the proper place to sense the rings
+            telemetry.addData("This is working!", 0);
+            telemetry.update();
+            driveStraightTime(.75, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 1100);
             positionRobot();
             //Navigating to the correct square
             wobblePosition();
@@ -226,7 +229,7 @@ public class Auto2021 extends LinearOpMode {
 
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
-            //This gets the robot in the proper place to sense the rings
+           /* //This gets the robot in the proper place to sense the rings
             positionRobot();
             //Navigating to the correct square
             wobblePosition();
@@ -234,6 +237,12 @@ public class Auto2021 extends LinearOpMode {
             wobbleDrop();
             park();
             //go drop the wobble goal in the correct zone and return to the parking line
+            stopDriving(); */
+            runtime.reset();
+            while(lastTime < 3250){
+                driveForward();
+            }
+            //driveStraightTime(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 2500);
             stopDriving();
 
         }
@@ -725,11 +734,11 @@ public class Auto2021 extends LinearOpMode {
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
     void wobbleUp() {
-        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.wobbleMotor.setPower(.25);
     }
 
     void wobbleDown(){
-        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.wobbleMotor.setPower(.25);
     }
 
     void wobbleOpen() {
@@ -873,6 +882,7 @@ public class Auto2021 extends LinearOpMode {
         double noneForward = 500;
         double oneForward = 500;
         double fourForward = 500;
+        rotateToHeading(0);
        /* enum currentPosition = ONE;
         currentPosition = pipeline.position;
         runtime.reset();
@@ -910,22 +920,26 @@ public class Auto2021 extends LinearOpMode {
             }
             stopDriving();
         }*/
-        while(lastTime < fourTime){
-            strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+        /*while(lastTime < fourTime){
+            //strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+
         }
         runtime.reset();
         while(lastTime < fourForward){
             driveForward();
         }
+        stopDriving();*/
+        driveStraightTime(.75, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 2000);
         stopDriving();
 
     }
 
     void positionRobot() {
         //drive up to rings
-        while (robot.backDistance.getDistance(DistanceUnit.MM) < FRONTDIST) {
+        /*while (robot.backDistance.getDistance(DistanceUnit.MM) < FRONTDIST) {
             driveForward();
-        }
+        }*/
+
         rotateToHeading(90);
     }
 
