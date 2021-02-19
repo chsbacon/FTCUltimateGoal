@@ -1,0 +1,488 @@
+Index: TeamCode/src/main/java/org/firstinspires/ftc/teamcode/GrahamHWMap.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.firstinspires.ftc.teamcode;\r\n\r\nimport com.qualcomm.robotcore.hardware.HardwareMap;\r\nimport com.qualcomm.robotcore.hardware.Servo;\r\nimport com.qualcomm.robotcore.util.ElapsedTime;\r\nimport com.qualcomm.robotcore.hardware.DcMotor;\r\nimport com.qualcomm.hardware.bosch.BNO055IMU;\r\n\r\nimport org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.Acceleration;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.AxesReference;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.Orientation;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;\r\nimport com.qualcomm.hardware.rev.Rev2mDistanceSensor;\r\nimport com.qualcomm.robotcore.hardware.DistanceSensor;\r\n\r\n\r\n\r\n/**\r\n * This is NOT an opmode.\r\n * This class defines all the specific hardware for a the BACONbot robot.\r\n */\r\n\r\npublic class GrahamHWMap {\r\n    /* Public OpMode members. */\r\n\r\n    public DcMotor  frontLeftMotor   = null;\r\n    public DcMotor  frontRightMotor  = null;\r\n    public DcMotor  backLeftMotor    = null;\r\n    public DcMotor  backRightMotor   = null;\r\n\r\n    public DcMotor  launcherMotor = null;\r\n\r\n    public DcMotor  intakeMotor1 = null;\r\n    public DcMotor  intakeMotor2 = null;\r\n\r\n    public Servo    wobbleServo1 = null;\r\n    public Servo    wobbleServo2 = null;\r\n\r\n    public Servo    launcherServo = null;\r\n\r\n\r\n    public DistanceSensor backDistance = null;\r\n\r\n\r\n    public BNO055IMU imu;\r\n\r\n\r\n    /* local OpMode members. */\r\n    private HardwareMap hwMap = null;\r\n\r\n\r\n    /* Constructor */\r\n    public GrahamHWMap() {\r\n    }\r\n\r\n    /* Initialize standard Hardware interfaces */\r\n    public void init(HardwareMap ahwMap) {\r\n        // Save reference to Hardware map\r\n        hwMap = ahwMap;\r\n\r\n        frontLeftMotor  = hwMap.dcMotor.get(\"FL\"); // H1 0 - motor port\r\n        frontRightMotor = hwMap.dcMotor.get(\"FR\"); // H1 1\r\n        backLeftMotor   = hwMap.dcMotor.get(\"BL\"); // H1 2\r\n        backRightMotor  = hwMap.dcMotor.get(\"BR\"); // H1 3\r\n/*\r\n        // not yet in configuration on phones\r\n        launcherMotor = hwMap.dcMotor.get(\"LM\"); // H2 P0\r\n\r\n        // not yet in configuration on phones\r\n        intakeMotor1 = hwMap.dcMotor.get(\"IM1\"); // H2 P1\r\n        intakeMotor2 = hwMap.dcMotor.get(\"IM2\"); // H2 P2\r\n\r\n        // not yet in configuration on phones\r\n        wobbleServo1 = hwMap.servo.get(\"WS1\");\r\n        wobbleServo2 = hwMap.servo.get(\"WS2\");\r\n\r\n        // not yet in configuration on phones\r\n        launcherServo = hwMap.servo.get(\"LS\");\r\n\r\n        backDistance = hwMap.get(DistanceSensor.class, \"bsr\"); //hub2 port 1\r\n*/\r\n\r\n        frontLeftMotor.setPower(0);\r\n        frontRightMotor.setPower(0);\r\n        backLeftMotor.setPower(0);\r\n        backRightMotor.setPower(0);\r\n\r\n        //frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);\r\n        //frontRightMotor.setDirection(DcMotor.Direction.REVERSE);\r\n        //backLeftMotor.setDirection(DcMotor.Direction.REVERSE);\r\n        //backRightMotor.setDirection(DcMotor.Direction.REVERSE);\r\n\r\n        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);\r\n        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);\r\n        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);\r\n        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);\r\n\r\n\r\n        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n\r\n/*\r\n        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n\r\n        intakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n        intakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\r\n*/\r\n\r\n\r\n        // Set up the parameters with which we will use our IMU. Note that integration\r\n        // algorithm here just reports accelerations to the logcat log; it doesn't actually\r\n        // provide positional information.\r\n        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();\r\n        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;\r\n        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;\r\n        parameters.calibrationDataFile = \"BNO055IMUCalibration.json\"; // see the calibration sample opmode\r\n        parameters.loggingEnabled      = true;\r\n        parameters.loggingTag          = \"IMU\";\r\n\r\n\r\n        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port\r\n        // on a Core Device Interface Module, configured to be a sensor of type \"AdaFruit IMU\",\r\n        // and named \"imu\".\r\n        imu = hwMap.get(BNO055IMU.class, \"imu\");\r\n        imu.initialize(parameters);\r\n\r\n\r\n    }\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- TeamCode/src/main/java/org/firstinspires/ftc/teamcode/GrahamHWMap.java	(revision fa03389c77d6c7b2860c120c193d9f74977131fb)
++++ TeamCode/src/main/java/org/firstinspires/ftc/teamcode/GrahamHWMap.java	(date 1613582277346)
+@@ -32,26 +32,24 @@
+     public DcMotor  backLeftMotor    = null;
+     public DcMotor  backRightMotor   = null;
+ 
+-    public DcMotor  launcherMotor = null;
+-
+-    public DcMotor  intakeMotor1 = null;
+-    public DcMotor  intakeMotor2 = null;
+-
+-    public Servo    wobbleServo1 = null;
+-    public Servo    wobbleServo2 = null;
+-
+-    public Servo    launcherServo = null;
+-
++    public DcMotor  launchMotor = null;
++    public DcMotor  intakeMotor = null;
++    public DcMotor  wobbleMotor = null;
+ 
+     public DistanceSensor backDistance = null;
+ 
++    public Servo    wobbleServo = null;
++    public Servo    feederServo = null;
++
++    public RevBlinkinLedDriver blinkinLedDriver;
++    public RevBlinkinLedDriver.BlinkinPattern pattern;
+ 
+     public BNO055IMU imu;
+ 
+ 
+     /* local OpMode members. */
+     private HardwareMap hwMap = null;
+-
++    private ElapsedTime period  = new ElapsedTime();
+ 
+     /* Constructor */
+     public GrahamHWMap() {
+@@ -62,55 +60,68 @@
+         // Save reference to Hardware map
+         hwMap = ahwMap;
+ 
++        //Drive Motors:
+         frontLeftMotor  = hwMap.dcMotor.get("FL"); // H1 0 - motor port
+         frontRightMotor = hwMap.dcMotor.get("FR"); // H1 1
+         backLeftMotor   = hwMap.dcMotor.get("BL"); // H1 2
+         backRightMotor  = hwMap.dcMotor.get("BR"); // H1 3
+-/*
+-        // not yet in configuration on phones
+-        launcherMotor = hwMap.dcMotor.get("LM"); // H2 P0
+ 
+-        // not yet in configuration on phones
+-        intakeMotor1 = hwMap.dcMotor.get("IM1"); // H2 P1
+-        intakeMotor2 = hwMap.dcMotor.get("IM2"); // H2 P2
++        //Additional Motors:
++        launchMotor = hwMap.dcMotor.get("LM"); // H2 P0
++        intakeMotor = hwMap.dcMotor.get("IM"); // H2 P1
++        wobbleMotor = hwMap.dcMotor.get("WM"); // H2 P2
+ 
+-        // not yet in configuration on phones
+-        wobbleServo1 = hwMap.servo.get("WS1");
+-        wobbleServo2 = hwMap.servo.get("WS2");
++        //Servos:
++        wobbleServo = hwMap.servo.get("WS"); //H2 P0
++        feederServo = hwMap.servo.get("FS"); //H2 P1
+ 
+-        // not yet in configuration on phones
+-        launcherServo = hwMap.servo.get("LS");
++        backDistance = hwMap.get(DistanceSensor.class, "bsr");
+ 
+-        backDistance = hwMap.get(DistanceSensor.class, "bsr"); //hub2 port 1
+-*/
++        blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
+ 
++        //Setting all motor to zero power
+         frontLeftMotor.setPower(0);
+         frontRightMotor.setPower(0);
+         backLeftMotor.setPower(0);
+         backRightMotor.setPower(0);
+ 
+-        //frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+-        //frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+-        //backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+-        //backRightMotor.setDirection(DcMotor.Direction.REVERSE);
++        launchMotor.setPower(0);
++        intakeMotor.setPower(0);
++        wobbleMotor.setPower(0);
++
++        feederServo.setPosition(0);
++        wobbleServo.setPosition(0);
+ 
++
++        //Reverse direction for drive motors
++        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
++        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
++        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
++        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
++
++        //Setup for motors without encoders
+         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
++        launchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
++        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+ 
++        //Setup for motors with encoders
++        wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
++        wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+ 
++        //Brake drive motors
+         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+ 
+-/*
+-        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
++        //Brake additional Motors
++        launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
++        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
++        wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+ 
+-        intakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+-        intakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+-*/
+ 
+ 
+         // Set up the parameters with which we will use our IMU. Note that integration
+@@ -133,5 +144,4 @@
+ 
+     }
+ 
+-}
+-
++}
+\ No newline at end of file
+Index: TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp1.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\npackage org.firstinspires.ftc.teamcode;\r\n\r\nimport android.app.Activity;\r\nimport android.graphics.Color;\r\nimport android.view.View;\r\n\r\nimport com.qualcomm.hardware.rev.RevBlinkinLedDriver;\r\nimport com.qualcomm.robotcore.eventloop.opmode.Autonomous;\r\nimport com.qualcomm.robotcore.eventloop.opmode.Disabled;\r\nimport com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;\r\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\r\nimport com.qualcomm.robotcore.hardware.DcMotor;\r\nimport com.qualcomm.robotcore.hardware.DcMotorSimple;\r\nimport com.qualcomm.robotcore.robocol.Heartbeat;\r\nimport com.qualcomm.robotcore.util.ElapsedTime;\r\nimport com.qualcomm.robotcore.util.Range;\r\nimport com.qualcomm.robotcore.hardware.ColorSensor;\r\nimport com.qualcomm.robotcore.hardware.HardwareMap;\r\n\r\n\r\nimport org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.AxesReference;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;\r\nimport org.firstinspires.ftc.robotcore.external.navigation.Orientation;\r\n\r\nimport java.util.concurrent.TimeUnit;\r\nimport java.util.Locale;\r\n\r\n\r\n// this is the final teleop file\r\n// essentially, don't edit this unless its a change you're sure you want\r\n// if you want to make changes on this branch/mecanum stuff\r\n// use the MecanumWheelDraft file\r\n\r\n@TeleOp(name = \"UltimateGoalTeleOp\", group = \"Opmode\")\r\n//@Disabled\r\npublic class TeleOp1 extends LinearOpMode {\r\n\r\n    private ElapsedTime runtime = new ElapsedTime();\r\n    GrahamHWMap robot = new GrahamHWMap();\r\n\r\n    @Override\r\n    public void runOpMode() {\r\n\r\n        robot.init(hardwareMap);\r\n\r\n        double x;\r\n        double y;\r\n        double r;\r\n        double frontLeft;\r\n        double frontRight;\r\n        double backLeft;\r\n        double backRight;\r\n\r\n        double step = .1;    //was .2    //how much to update\r\n        double interval = 25;  //was 75 // how often to update\r\n        double lastSpeedTime = runtime.milliseconds();\r\n\r\n        double max;\r\n\r\n        double launchMotorStatus = 0; // do not edit this\r\n        double launchMotorPower = 0; //do not edit this\r\n        double desiredLaunchPower = .85; // edit this for the power you want to motor to spin at\r\n\r\n        double intakeMotorStatus = 0; //do not edit this\r\n        double intakeMotorPower = 0; //do not edit this\r\n        double desiredIntakePower = .7; //edit this for the power you want the motor to spin at\r\n\r\n        // change the active and rest positions to change where each servo goes\r\n        double wobbleServoPosition = 0;\r\n        double WSactivePos1 = 0;\r\n        double WSactivePos2 = 0;\r\n        double WSrestPos1 = 0;\r\n        double WSrestPos2 = 0;\r\n\r\n        // change the active and rest positions to change where the servo goes\r\n        double launcherServoPosition = 0;\r\n        double LSactivePos = 0;\r\n        double LSrestPos = 0;\r\n\r\n        Orientation targOrientMain;\r\n        targOrientMain = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n\r\n        // Wait for the game to start (driver presses PLAY)\r\n        waitForStart();\r\n\r\n        while (opModeIsActive()) {\r\n\r\n            Orientation angles;\r\n\r\n            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n\r\n\r\n            y = gamepad1.left_stick_y;\r\n            x = gamepad1.left_stick_x;\r\n            r = gamepad1.right_stick_x;\r\n\r\n\r\n            // do not let rotation dominate movement\r\n            r = r / 2;\r\n\r\n            // calculate the power for each wheel\r\n            frontLeft = +y - x + r;\r\n            backLeft = +y + x + r;\r\n\r\n            frontRight = -y - x + r;\r\n            backRight = -y + x + r;\r\n            /*\r\n            // Normalize the values so none exceeds +/- 1.0\r\n            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));\r\n            if (max > 1.0) {\r\n                frontLeft = frontLeft / max;\r\n                frontRight = frontRight / max;\r\n                backLeft = backLeft / max;\r\n                backRight = backRight / max;\r\n            }\r\n\r\n             */\r\n\r\n            if (runtime.milliseconds() > lastSpeedTime + interval) {\r\n                lastSpeedTime = runtime.milliseconds();\r\n\r\n                frontLeft = getRampPower(frontLeft, robot.frontLeftMotor.getPower(), step);\r\n                frontRight = getRampPower(-frontRight, -robot.frontRightMotor.getPower(), step);\r\n                backLeft = getRampPower(backLeft, robot.backLeftMotor.getPower(), step);\r\n                backRight = getRampPower(-backRight, -robot.backRightMotor.getPower(), step);\r\n\r\n                frontRight = -frontRight;\r\n                backRight = -backRight;\r\n\r\n\r\n\r\n\r\n                max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));\r\n                if (max > .9) {   //was 1\r\n                    frontLeft = frontLeft / max;\r\n                    frontRight = frontRight / max;\r\n                    backLeft = backLeft / max;\r\n                    backRight = backRight / max;\r\n                }\r\n\r\n\r\n                robot.frontLeftMotor.setPower(frontLeft);\r\n                robot.frontRightMotor.setPower(frontRight);\r\n                robot.backLeftMotor.setPower(backLeft);\r\n                robot.backRightMotor.setPower(backRight);\r\n\r\n\r\n                // Show wheel power to driver\r\n                telemetry.addData(\"front left\", \"%.2f\", frontLeft);\r\n                telemetry.addData(\"front right\", \"%.2f\", frontRight);\r\n                telemetry.addData(\"back left\", \"%.2f\", backLeft);\r\n                telemetry.addData(\"back right\", \"%.2f\", backRight);\r\n\r\n                //telemetry.addData(\"current heading\", formatAngle(angles.angleUnit, angles.firstAngle));\r\n\r\n                telemetry.addData(\"back distance\", robot.backDistance.getDistance(DistanceUnit.MM));\r\n\r\n                telemetry.update();\r\n\r\n\r\n\r\n            }\r\n\r\n            //dont delete this -- this is what you gotta pass through the heading functions to if you want to keep the heading straight\r\n            // robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES\r\n\r\n// gamepad 1 - 111111111111111111111111111111111111111111\r\n            // driver launcher\r\n\r\n\r\n            if (gamepad1.a){\r\n                sleep(250);\r\n                if(launcherServoPosition == 0){\r\n                    robot.launcherServo.setPosition(LSactivePos);\r\n                    launcherServoPosition = 1;\r\n                }\r\n                if(launcherServoPosition == 1){\r\n                    robot.launcherServo.setPosition(LSrestPos);\r\n                    launcherServoPosition = 0;\r\n                }\r\n            }\r\n\r\n            if(gamepad1.x){\r\n\r\n            }\r\n\r\n            if(gamepad1.b){\r\n\r\n            }\r\n\r\n            //launcher motor\r\n            // turns the launcher motor on or off\r\n            if(gamepad1.y){\r\n                sleep(250);\r\n                if (launchMotorStatus == 0){ //if motor off\r\n                    launchMotorPower = desiredLaunchPower;  //turn motor on\r\n                    launchMotorStatus = 1;  // motor is on\r\n                }\r\n                else if (launchMotorStatus == 1){ // if motor on\r\n                    launchMotorPower = 0;       // turn motor off\r\n                    launchMotorStatus = 0;      // motor is off\r\n                }\r\n            }\r\n            robot.launcherMotor.setPower(launchMotorPower);\r\n\r\n\r\n            if(gamepad1.right_bumper){\r\n\r\n            }\r\n\r\n            if(gamepad1.left_bumper){\r\n\r\n            }\r\n\r\n// gamepad 2 - 22222222222222222222222222222222222222\r\n            // grabber collector\r\n\r\n            //intake motor\r\n            if(gamepad2.a){\r\n                sleep(250);\r\n                if(intakeMotorStatus == 0){ //if motor is off\r\n                    intakeMotorPower = desiredIntakePower; //turn motor on\r\n                    intakeMotorStatus = 1; //motor is on\r\n                }\r\n                else if (intakeMotorStatus == 1){ //if motor is on\r\n                    intakeMotorPower = 0;   //turn motor off\r\n                    intakeMotorStatus = 0; //motor is off\r\n                }\r\n            }\r\n            robot.intakeMotor1.setPower(intakeMotorPower);\r\n            robot.intakeMotor2.setPower(-intakeMotorPower);\r\n\r\n\r\n            // wobble servo button\r\n            // positions not yet calibrated -- all set to 0\r\n            if(gamepad2.x){\r\n                sleep(250);\r\n                if(wobbleServoPosition == 0){\r\n                    robot.wobbleServo1.setPosition(WSactivePos1);\r\n                    robot.wobbleServo2.setPosition(WSactivePos2);\r\n                    wobbleServoPosition = 1;\r\n                }\r\n                if(wobbleServoPosition == 1){\r\n                    robot.wobbleServo1.setPosition(WSrestPos1);\r\n                    robot.wobbleServo1.setPosition(WSrestPos2);\r\n                    wobbleServoPosition = 0;\r\n                }\r\n            }\r\n\r\n\r\n\r\n\r\n\r\n\r\n        }\r\n\r\n    }\r\n\r\n    //used for ramp up driving\r\n    double getRampPower(double t, double a, double step) {\r\n        double delta;\r\n        double returnPower = 0;\r\n\r\n        delta = t - a;\r\n        if (delta > 0) {  // speeding up\r\n            returnPower = a + step;\r\n            if (returnPower > t) {\r\n                returnPower = t;\r\n            }\r\n        }\r\n        if (delta < 0) {  //slowing down\r\n            returnPower = a - (step);\r\n            if (returnPower < t)\r\n                returnPower = t;\r\n        }\r\n        if (delta == 0) {\r\n            returnPower = a;\r\n        }\r\n        return returnPower;\r\n    }\r\n\r\n    //rotates to the given heading\r\n    void rotateToHeading(double heading){\r\n\r\n        Orientation currentOrient;\r\n        currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n        double currentAngle = currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle);\r\n\r\n        for (double i = .3; i > .1; i = i-.1) {\r\n\r\n            blindRotateRight(i);\r\n            while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) > heading) && opModeIsActive()) {\r\n\r\n                currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n                telemetry.addData(\"current heading\", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));\r\n                telemetry.addData(\"target heading\", heading);\r\n                telemetry.update();\r\n            }\r\n            stopDriving();\r\n\r\n            blindRotateLeft(i);\r\n            while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) < heading) && opModeIsActive()) {\r\n\r\n                currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n                telemetry.addData(\"current heading\", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));\r\n                telemetry.addData(\"target heading\", heading);\r\n                telemetry.update();\r\n            }\r\n            stopDriving();\r\n        }\r\n\r\n\r\n\r\n        blindRotateRight(.175);\r\n        while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) > heading) && opModeIsActive()) {\r\n\r\n            currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n            telemetry.addData(\"current heading\", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));\r\n            telemetry.addData(\"target heading\", heading);\r\n            telemetry.update();\r\n        }\r\n        stopDriving();\r\n\r\n\r\n\r\n\r\n        blindRotateLeft(.175);\r\n        while ((currentOrient.angleUnit.DEGREES.normalize(currentOrient.firstAngle) < heading) && opModeIsActive()) {\r\n            currentOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n            telemetry.addData(\"current heading\", formatAngle(currentOrient.angleUnit, currentOrient.firstAngle));\r\n            telemetry.addData(\"target heading\", heading);\r\n            telemetry.update();\r\n        }\r\n        stopDriving();\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n    //just rotates to the right\r\n    void blindRotateRight(double pwr){\r\n        pwr = -pwr; // -pwr on all wheels turns right\r\n        // Set power on each wheel\r\n        robot.frontLeftMotor.setPower(pwr);\r\n        robot.frontRightMotor.setPower(pwr);\r\n        robot.backLeftMotor.setPower(pwr);\r\n        robot.backRightMotor.setPower(pwr);\r\n\r\n    }\r\n\r\n    //just rotates to the left\r\n    void blindRotateLeft(double pwr){\r\n\r\n        robot.frontLeftMotor.setPower(pwr);\r\n        robot.frontRightMotor.setPower(pwr);\r\n        robot.backLeftMotor.setPower(pwr);\r\n        robot.backRightMotor.setPower(pwr);\r\n\r\n    }\r\n\r\n\r\n\r\n    //strafes left at the heading it was called at\r\n    void strafeLeft(double pwr, Orientation target) {\r\n\r\n        //orients\r\n        Orientation targetOrient;\r\n        Orientation currOrient;\r\n\r\n        //converts the target heading to a double to use in error calculation\r\n        targetOrient = target;\r\n        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);\r\n\r\n        //rChanger changes the sensitivity of the R value\r\n        double rChanger = 10;\r\n        double frontLeft, frontRight, backLeft, backRight, max;\r\n\r\n\r\n        while((opModeIsActive()) && (gamepad1.x)){\r\n\r\n            //gamepad.x is here as that is the button I've been pressing to test this function\r\n            //if you want to have this run properly, you'll need to replace gamepad.x with some other qualifier t\r\n            // that will stop the while loop at some point, some way\r\n\r\n\r\n            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);\r\n\r\n            double error = targAng - currAng;\r\n\r\n\r\n            double r = (-error / 180) / (rChanger * pwr);\r\n            //double r = (-error/180);\r\n            //r = 0;\r\n            //r=-r;\r\n\r\n            if ((r < .07) && (r > 0)) {\r\n                r = .07;\r\n            } else if ((r > -.07) && (r < 0)) {\r\n                r = -.07;\r\n            }\r\n\r\n\r\n            // Normalize the values so none exceeds +/- 1.0\r\n            frontLeft = pwr + r ;\r\n            backLeft = -pwr + r ;\r\n            backRight = -pwr + r ;\r\n            frontRight = pwr + r ;\r\n\r\n            //original\r\n            // +    +\r\n            // -    +\r\n            // -    +\r\n            // +    +\r\n\r\n\r\n            //strafe right\r\n            // -    +\r\n            // +    +\r\n            // +    +\r\n            // -    +\r\n\r\n            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));\r\n            if (max > 1.0) {\r\n                frontLeft = frontLeft / max;\r\n                frontRight = frontRight / max;\r\n                backLeft = backLeft / max;\r\n                backRight = backRight / max;\r\n            }\r\n\r\n\r\n\r\n            telemetry.addData(\"front left\", \"%.2f\", frontLeft);\r\n            telemetry.addData(\"front right\", \"%.2f\", frontRight);\r\n            telemetry.addData(\"back left\", \"%.2f\", backLeft);\r\n            telemetry.addData(\"back right\", \"%.2f\", backRight);\r\n\r\n            telemetry.addData(\"error\", error);\r\n\r\n            telemetry.addData(\"current heading\", formatAngle(currOrient.angleUnit, currOrient.firstAngle));\r\n            telemetry.addData(\"target heading\", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));\r\n\r\n            telemetry.update();\r\n\r\n            //send the power to the motors\r\n            robot.frontLeftMotor.setPower(frontLeft);\r\n            robot.backLeftMotor.setPower(backLeft);\r\n            robot.backRightMotor.setPower(backRight);\r\n            robot.frontRightMotor.setPower(frontRight);\r\n\r\n\r\n        }\r\n\r\n\r\n    }\r\n\r\n\r\n\r\n    //kills power ot all wheels\r\n    void stopDriving(){\r\n        robot.frontLeftMotor.setPower(0);\r\n        robot.frontRightMotor.setPower(0);\r\n        robot.backLeftMotor.setPower(0);\r\n        robot.backRightMotor.setPower(0);\r\n    }\r\n\r\n    //drives forward at the heading it was called at\r\n    // for example, calling this when the robot is at 60 heading, it will go to that heading, even if it gets knocked off course\r\n    void driveStraightTime(double pwr, Orientation target, double desiredTime){\r\n\r\n        //orients\r\n        Orientation targetOrient;\r\n        Orientation currOrient;\r\n\r\n\r\n        double lastTime = runtime.milliseconds();\r\n\r\n        //converts the target heading to a double to use in error calculation\r\n        targetOrient = target;\r\n        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);\r\n\r\n        //rChanger changes the sensitivity of the R value\r\n        double rChanger = 10;\r\n        double frontLeft, frontRight, backLeft, backRight, max;\r\n\r\n        while(((runtime.milliseconds() < lastTime + desiredTime) && (opModeIsActive()))){\r\n\r\n\r\n\r\n            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);\r\n\r\n            double error = targAng - currAng;\r\n\r\n\r\n            double r = (-error / 180) / (pwr /* * rChanger*/);\r\n            //r = 0;\r\n\r\n            // Normalize the values so none exceeds +/- 1.0\r\n            frontLeft = pwr + r ;\r\n            backLeft = pwr + r ;\r\n            backRight = pwr - r ;\r\n            frontRight = pwr - r ;\r\n\r\n            frontLeft = -frontLeft;\r\n            backLeft = -backLeft;\r\n\r\n            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));\r\n            if (max > 1.0) {\r\n                frontLeft = frontLeft / max;\r\n                frontRight = frontRight / max;\r\n                backLeft = backLeft / max;\r\n                backRight = backRight / max;\r\n            }\r\n\r\n\r\n\r\n            telemetry.addData(\"front left\", \"%.2f\", frontLeft);\r\n            telemetry.addData(\"front right\", \"%.2f\", frontRight);\r\n            telemetry.addData(\"back left\", \"%.2f\", backLeft);\r\n            telemetry.addData(\"back right\", \"%.2f\", backRight);\r\n\r\n            telemetry.addData(\"current heading\", formatAngle(currOrient.angleUnit, currOrient.firstAngle));\r\n            telemetry.addData(\"target heading\", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));\r\n\r\n            telemetry.update();\r\n\r\n            //send the power to the motors\r\n            robot.frontLeftMotor.setPower(frontLeft);\r\n            robot.backLeftMotor.setPower(backLeft);\r\n            robot.backRightMotor.setPower(backRight);\r\n            robot.frontRightMotor.setPower(frontRight);\r\n\r\n\r\n\r\n        }\r\n\r\n    }\r\n\r\n    //drives straight for a desired distanced based off of the back distance sensor\r\n    void driveStraightDistance(double pwr, Orientation target, double desiredDistance){\r\n\r\n        //orients\r\n        Orientation targetOrient;\r\n        Orientation currOrient;\r\n\r\n\r\n        //converts the target heading to a double to use in error calculation\r\n        targetOrient = target;\r\n        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);\r\n\r\n        //rChanger changes the sensitivity of the R value\r\n        double rChanger = 10;\r\n        double frontLeft, frontRight, backLeft, backRight, max;\r\n\r\n        while(((robot.backDistance.getDistance(DistanceUnit.MM) < desiredDistance) && (opModeIsActive()))){\r\n\r\n            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);\r\n            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);\r\n\r\n            double error = targAng - currAng;\r\n\r\n\r\n            double r = (-error / 180) / (pwr /* * rChanger*/);\r\n            //r = 0;\r\n\r\n            // Normalize the values so none exceeds +/- 1.0\r\n            frontLeft = pwr + r ;\r\n            backLeft = pwr + r ;\r\n            backRight = pwr - r ;\r\n            frontRight = pwr - r ;\r\n\r\n            frontLeft = -frontLeft;\r\n            backLeft = -backLeft;\r\n\r\n            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));\r\n            if (max > 1.0) {\r\n                frontLeft = frontLeft / max;\r\n                frontRight = frontRight / max;\r\n                backLeft = backLeft / max;\r\n                backRight = backRight / max;\r\n            }\r\n\r\n\r\n\r\n            telemetry.addData(\"front left\", \"%.2f\", frontLeft);\r\n            telemetry.addData(\"front right\", \"%.2f\", frontRight);\r\n            telemetry.addData(\"back left\", \"%.2f\", backLeft);\r\n            telemetry.addData(\"back right\", \"%.2f\", backRight);\r\n\r\n            telemetry.addData(\"current heading\", formatAngle(currOrient.angleUnit, currOrient.firstAngle));\r\n            telemetry.addData(\"target heading\", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));\r\n\r\n            telemetry.update();\r\n\r\n            //send the power to the motors\r\n            robot.frontLeftMotor.setPower(frontLeft);\r\n            robot.backLeftMotor.setPower(backLeft);\r\n            robot.backRightMotor.setPower(backRight);\r\n            robot.frontRightMotor.setPower(frontRight);\r\n\r\n\r\n\r\n        }\r\n\r\n    }\r\n\r\n\r\n\r\n\r\n    String formatAngle(AngleUnit angleUnit, double angle) {\r\n        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));\r\n    }\r\n\r\n    String formatDegrees(double degrees) {\r\n        return String.format(Locale.getDefault(), \"%.1f\", AngleUnit.DEGREES.normalize(degrees));\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp1.java	(revision fa03389c77d6c7b2860c120c193d9f74977131fb)
++++ TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp1.java	(date 1613582219708)
+@@ -1,4 +1,3 @@
+-
+ package org.firstinspires.ftc.teamcode;
+ 
+ import android.app.Activity;
+@@ -58,28 +57,34 @@
+         double interval = 25;  //was 75 // how often to update
+         double lastSpeedTime = runtime.milliseconds();
+ 
+-        double max;
++        double max; //
+ 
+         double launchMotorStatus = 0; // do not edit this
+         double launchMotorPower = 0; //do not edit this
+-        double desiredLaunchPower = .85; // edit this for the power you want to motor to spin at
++        double desiredLaunchPower = .75; // edit this for the power you want to motor to spin at
+ 
+         double intakeMotorStatus = 0; //do not edit this
+         double intakeMotorPower = 0; //do not edit this
+-        double desiredIntakePower = .7; //edit this for the power you want the motor to spin at
++        double desiredIntakePower = .75; //edit this for the power you want the motor to spin at
++
++
+ 
+         // change the active and rest positions to change where each servo goes
+-        double wobbleServoPosition = 0;
+         double WSactivePos1 = 0;
+-        double WSactivePos2 = 0;
+         double WSrestPos1 = 0;
+-        double WSrestPos2 = 0;
++        double WMpower = .25;  //change the motor up/down speed
++        long WMsleep = 1500;    // change how long we let the claw raise/lower in milliseconds
++
++        double LServoPos = 0;
+ 
+         // change the active and rest positions to change where the servo goes
+-        double launcherServoPosition = 0;
+-        double LSactivePos = 0;
++        double feederServoPosition = 0;
++        double LSactivePos = 90;
+         double LSrestPos = 0;
+ 
++        // this should be the heading of the goals, relative to the robot start
++        double GoalHeading = 90;
++
+         Orientation targOrientMain;
+         targOrientMain = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+ 
+@@ -116,7 +121,6 @@
+                 backLeft = backLeft / max;
+                 backRight = backRight / max;
+             }
+-
+              */
+ 
+             if (runtime.milliseconds() > lastSpeedTime + interval) {
+@@ -168,55 +172,95 @@
+             // robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES
+ 
+ // gamepad 1 - 111111111111111111111111111111111111111111
+-            // driver launcher
++            // driver - wobble
++
+ 
+ 
+-            if (gamepad1.a){
+-                sleep(250);
+-                if(launcherServoPosition == 0){
+-                    robot.launcherServo.setPosition(LSactivePos);
+-                    launcherServoPosition = 1;
+-                }
+-                if(launcherServoPosition == 1){
+-                    robot.launcherServo.setPosition(LSrestPos);
+-                    launcherServoPosition = 0;
+-                }
+-            }
++            if(gamepad1.a){
+ 
+-            if(gamepad1.x){
+ 
+             }
+ 
+-            if(gamepad1.b){
+ 
+-            }
+-
+-            //launcher motor
+-            // turns the launcher motor on or off
++            // rotate to the heading of the goals -- used to line up shots
+             if(gamepad1.y){
+                 sleep(250);
+-                if (launchMotorStatus == 0){ //if motor off
+-                    launchMotorPower = desiredLaunchPower;  //turn motor on
+-                    launchMotorStatus = 1;  // motor is on
+-                }
+-                else if (launchMotorStatus == 1){ // if motor on
+-                    launchMotorPower = 0;       // turn motor off
+-                    launchMotorStatus = 0;      // motor is off
+-                }
++                rotateToHeading(GoalHeading);
++            }
++
++
++
++
++
++            // pick up wobble
++            if(gamepad1.left_bumper){
++
++                sleep(250); //sleep used to debounce button
++
++                //prep
++                robot.wobbleServo.setPosition(WSrestPos1);   //open the claw
++                sleep(250);  //give 1/4 second for claw to open
++
++                //lowering
++                robot.wobbleMotor.setPower(WMpower);  //lower the lift
++                sleep(WMsleep);  //let the lift lower for WMsleep amount of time
++                robot.wobbleMotor.setPower(0); //stop the lift from lowering
++
++                //grabbing
++                robot.wobbleServo.setPosition(WSactivePos1); //close the claw
++                sleep(500); //give 1/2 second for the claw to close
++
++                //raising
++                robot.wobbleMotor.setPower(-WMpower); //raise the lift
++                sleep(WMsleep); // let the lift raise for WMsleep amount of time
++                robot.wobbleMotor.setPower(0);  // stop the lift at the top
++
++
++                robot.wobbleServo.setPosition(WSactivePos1); // make sure the claw is closed
++
+             }
+-            robot.launcherMotor.setPower(launchMotorPower);
+ 
+ 
++            //put down wobble
+             if(gamepad1.right_bumper){
+ 
++                sleep(250);  //sleep used to debounce button
++
++                //prep
++                robot.wobbleServo.setPosition(WSactivePos1);  //make sure the claw is close
++                sleep(250); //give 1/4 second to make sure claw is closed
++
++                //lowering
++                robot.wobbleMotor.setPower(WMpower);  //lower claw
++                sleep(WMsleep); // let claw lower for WMsleep amount of time
++                robot.wobbleMotor.setPower(0);
++
++                //letting go
++                robot.wobbleServo.setPosition(WSrestPos1); //open claw
++                sleep(250); // let claw open
++
++                //raising
++                robot.wobbleMotor.setPower(-WMpower); //raise claw
++                sleep(WMsleep); //raise claw for Wmsleep amount of time
++                robot.wobbleMotor.setPower(0); //stop motor at top
++
+             }
+ 
+-            if(gamepad1.left_bumper){
++            robot.wobbleMotor.setPower(0);
++
+ 
++            if(gamepad1.b){
++                strafeLeft(.3,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
++            }
++
++
++
++            if(gamepad1.x){
++                strafeRight(.3,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+             }
+ 
+ // gamepad 2 - 22222222222222222222222222222222222222
+-            // grabber collector
++            // shooter collector
+ 
+             //intake motor
+             if(gamepad2.a){
+@@ -230,25 +274,38 @@
+                     intakeMotorStatus = 0; //motor is off
+                 }
+             }
+-            robot.intakeMotor1.setPower(intakeMotorPower);
+-            robot.intakeMotor2.setPower(-intakeMotorPower);
++
++            if((gamepad2.a) && (gamepad2.left_bumper)){
++                robot.intakeMotor.setPower(-desiredIntakePower);
++            }
+ 
++            robot.intakeMotor.setPower(intakeMotorPower);
+ 
+-            // wobble servo button
+-            // positions not yet calibrated -- all set to 0
++
++            //launcher motor
++            // turns the launcher motor on or off
+             if(gamepad2.x){
+                 sleep(250);
+-                if(wobbleServoPosition == 0){
+-                    robot.wobbleServo1.setPosition(WSactivePos1);
+-                    robot.wobbleServo2.setPosition(WSactivePos2);
+-                    wobbleServoPosition = 1;
++                if (launchMotorStatus == 0){ //if motor off
++                    launchMotorPower = desiredLaunchPower;  //turn motor on
++                    launchMotorStatus = 1;  // motor is on
++                }
++                else if (launchMotorStatus == 1){ // if motor on
++                    launchMotorPower = 0;       // turn motor off
++                    launchMotorStatus = 0;      // motor is off
+                 }
+-                if(wobbleServoPosition == 1){
+-                    robot.wobbleServo1.setPosition(WSrestPos1);
+-                    robot.wobbleServo1.setPosition(WSrestPos2);
+-                    wobbleServoPosition = 0;
+-                }
++            }
++            robot.launchMotor.setPower(launchMotorPower);
++
++
++            if(gamepad2.b){
++                robot.feederServo.setPosition(LSrestPos);
++                sleep(250);
+             }
++            if(gamepad2.y){
++                robot.feederServo.setPosition(LSactivePos);
++                sleep(250);
++            }
+ 
+ 
+ 
+@@ -460,6 +517,101 @@
+ 
+ 
+ 
++    //strafes left at the heading it was called at
++    void strafeRight(double pwr, Orientation target) {
++
++        //orients
++        Orientation targetOrient;
++        Orientation currOrient;
++
++        //converts the target heading to a double to use in error calculation
++        targetOrient = target;
++        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);
++
++        //rChanger changes the sensitivity of the R value
++        double rChanger = 10;
++        double frontLeft, frontRight, backLeft, backRight, max;
++
++
++        while((opModeIsActive()) && (gamepad1.x)){
++
++            //gamepad.x is here as that is the button I've been pressing to test this function
++            //if you want to have this run properly, you'll need to replace gamepad.x with some other qualifier t
++            // that will stop the while loop at some point, some way
++
++
++            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
++            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
++
++            double error = targAng - currAng;
++
++
++            double r = (-error / 180) / (rChanger * pwr);
++            //double r = (-error/180);
++            //r = 0;
++            //r=-r;
++
++            if ((r < .07) && (r > 0)) {
++                r = .07;
++            } else if ((r > -.07) && (r < 0)) {
++                r = -.07;
++            }
++
++
++            // Normalize the values so none exceeds +/- 1.0
++            frontLeft = -pwr + r ;
++            backLeft = pwr + r ;
++            backRight = pwr + r ;
++            frontRight = -pwr + r ;
++
++            //original
++            // +    +
++            // -    +
++            // -    +
++            // +    +
++
++
++            //strafe right
++            // -    +
++            // +    +
++            // +    +
++            // -    +
++
++            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
++            if (max > 1.0) {
++                frontLeft = frontLeft / max;
++                frontRight = frontRight / max;
++                backLeft = backLeft / max;
++                backRight = backRight / max;
++            }
++
++
++
++            telemetry.addData("front left", "%.2f", frontLeft);
++            telemetry.addData("front right", "%.2f", frontRight);
++            telemetry.addData("back left", "%.2f", backLeft);
++            telemetry.addData("back right", "%.2f", backRight);
++
++            telemetry.addData("error", error);
++
++            telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
++            telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
++
++            telemetry.update();
++
++            //send the power to the motors
++            robot.frontLeftMotor.setPower(frontLeft);
++            robot.backLeftMotor.setPower(backLeft);
++            robot.backRightMotor.setPower(backRight);
++            robot.frontRightMotor.setPower(frontRight);
++
++
++        }
++
++
++    }
++
++
+     //kills power ot all wheels
+     void stopDriving(){
+         robot.frontLeftMotor.setPower(0);
