@@ -873,8 +873,10 @@ public class Auto2021 extends LinearOpMode {
         double noneForward = 500;
         double oneForward = 500;
         double fourForward = 500;
+       /* enum currentPosition = ONE;
+        currentPosition = pipeline.position;
         runtime.reset();
-        /*if (position = SkystoneDeterminationPipeline.RingPosition.NONE) {
+        if (currentPosition == pipeline.RingPosition.NONE) {
             while (lastTime < noneTime) {
                 strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
             }
@@ -908,6 +910,15 @@ public class Auto2021 extends LinearOpMode {
             }
             stopDriving();
         }*/
+        while(lastTime < fourTime){
+            strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+        }
+        runtime.reset();
+        while(lastTime < fourForward){
+            driveForward();
+        }
+        stopDriving();
+
     }
 
     void positionRobot() {
