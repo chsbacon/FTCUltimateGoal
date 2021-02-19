@@ -65,15 +65,16 @@ public class Teleop extends LinearOpMode {
 
         double intakeMotorStatus = 0; //do not edit this
         double intakeMotorPower = 0; //do not edit this
-        double desiredIntakePower = .75; //edit this for the power you want the motor to spin at
+        double desiredIntakePower = 1; //edit this for the power you want the motor to spin at
 
 
 
         // change the active and rest positions to change where each servo goes
-        double WSactivePos1 = 0;
+        double WSactivePos1 = 0.5;
         double WSrestPos1 = 0;
         double WMpower = .25;  //change the motor up/down speed
-        long WMsleep = 1500;    // change how long we let the claw raise/lower in milliseconds
+        long WMsleep = 1000;    // change how long we let the claw raise/lower in milliseconds
+        double desiredWobbleMotorPower =  0 ;
 
         double LServoPos = 0;
 
@@ -83,7 +84,7 @@ public class Teleop extends LinearOpMode {
         double LSrestPos = 0;
 
         // this should be the heading of the goals, relative to the robot start
-        double GoalHeading = 90;
+        double GoalHeading = 0;
 
         Orientation targOrientMain;
         targOrientMain = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -195,28 +196,6 @@ public class Teleop extends LinearOpMode {
             // pick up wobble
             if(gamepad1.left_bumper){
 
-                sleep(250); //sleep used to debounce button
-
-                //prep
-                robot.wobbleServo.setPosition(WSrestPos1);   //open the claw
-                sleep(250);  //give 1/4 second for claw to open
-
-                //lowering
-                robot.wobbleMotor.setPower(WMpower);  //lower the lift
-                sleep(WMsleep);  //let the lift lower for WMsleep amount of time
-                robot.wobbleMotor.setPower(0); //stop the lift from lowering
-
-                //grabbing
-                robot.wobbleServo.setPosition(WSactivePos1); //close the claw
-                sleep(500); //give 1/2 second for the claw to close
-
-                //raising
-                robot.wobbleMotor.setPower(-WMpower); //raise the lift
-                sleep(WMsleep); // let the lift raise for WMsleep amount of time
-                robot.wobbleMotor.setPower(0);  // stop the lift at the top
-
-
-                robot.wobbleServo.setPosition(WSactivePos1); // make sure the claw is closed
 
             }
 
@@ -224,29 +203,26 @@ public class Teleop extends LinearOpMode {
             //put down wobble
             if(gamepad1.right_bumper){
 
-                sleep(250);  //sleep used to debounce button
-
-                //prep
-                robot.wobbleServo.setPosition(WSactivePos1);  //make sure the claw is close
-                sleep(250); //give 1/4 second to make sure claw is closed
-
-                //lowering
-                robot.wobbleMotor.setPower(WMpower);  //lower claw
-                sleep(WMsleep); // let claw lower for WMsleep amount of time
-                robot.wobbleMotor.setPower(0);
-
-                //letting go
-                robot.wobbleServo.setPosition(WSrestPos1); //open claw
-                sleep(250); // let claw open
-
-                //raising
-                robot.wobbleMotor.setPower(-WMpower); //raise claw
-                sleep(WMsleep); //raise claw for Wmsleep amount of time
-                robot.wobbleMotor.setPower(0); //stop motor at top
-
             }
 
+            while(gamepad1.dpad_up){
+                //sleep(250);
+                robot.wobbleMotor.setPower(.25);
+            }
+            while(gamepad1.dpad_down){
+                //sleep(250);
+                robot.wobbleMotor.setPower(-.25);
+            }
             robot.wobbleMotor.setPower(0);
+
+            if(gamepad1.left_bumper){
+                sleep(250);
+                robot.wobbleServo.setPosition(WSactivePos1);
+            }
+            if(gamepad1.right_bumper){
+                sleep(250);
+                robot.wobbleServo.setPosition(WSrestPos1);
+            }
 
 
             if(gamepad1.b){
@@ -275,7 +251,7 @@ public class Teleop extends LinearOpMode {
                 }
             }
 
-            if((gamepad2.a) && (gamepad2.left_bumper)){
+            while((gamepad2.a) && (gamepad2.left_bumper)){
                 robot.intakeMotor.setPower(-desiredIntakePower);
             }
 

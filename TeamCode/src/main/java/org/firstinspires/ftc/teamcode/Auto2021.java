@@ -34,6 +34,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
+import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 // Hardware map
 import org.firstinspires.ftc.teamcode.HardwareBACONbot;
@@ -304,125 +305,194 @@ public class Auto2021 extends LinearOpMode {
 
 
     //Strafe Left - (used to strafe towards the center line for parking)
-    void strafeLeft(int side, double pwr, Orientation target) {  //added int pwr to reduce initial power
-        //Get the current orientation
+    void strafeLeft(double pwr, Orientation target) {
+
+        //orients
+        Orientation targetOrient;
         Orientation currOrient;
-        currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        //Compare the current orientation to the target
-        double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
-        double targAng = 0.0;  // target.angleUnit.DEGREES.normalize(target.firstAngle);
-        double error = targAng - currAng;
-        double frontLeft;
-        double frontRight;
-        double backLeft;
-        double backRight;
-        double max;
-        //scale the error so that it is a motor value and
-        //then scale it by a third of the power to make sure it
-        //doesn't dominate the movement
-        double r = -error / 180 * (pwr * 10);
+        //converts the target heading to a double to use in error calculation
+        targetOrient = target;
+        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);
 
-        /*
-        //if the absolute value of r is less than
-        //.07, the motors won't do anything, so if
-        //it is less than .07, make it .07
-        if ((r < .07) && (r > 0)) {
-            r = .07;
-        } else if ((r > -.07) && (r < 0)) {
-            r = -.07;
+        //rChanger changes the sensitivity of the R value
+        double rChanger = 10;
+        double frontLeft, frontRight, backLeft, backRight, max;
+
+
+        while((opModeIsActive()) && (gamepad1.x)){
+
+            //gamepad.x is here as that is the button I've been pressing to test this function
+            //if you want to have this run properly, you'll need to replace gamepad.x with some other qualifier t
+            // that will stop the while loop at some point, some way
+
+
+            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
+
+            double error = targAng - currAng;
+
+
+            double r = (-error / 180) / (rChanger * pwr);
+            //double r = (-error/180);
+            //r = 0;
+            //r=-r;
+
+            if ((r < .07) && (r > 0)) {
+                r = .07;
+            } else if ((r > -.07) && (r < 0)) {
+                r = -.07;
+            }
+
+
+            // Normalize the values so none exceeds +/- 1.0
+            frontLeft = pwr + r ;
+            backLeft = -pwr + r ;
+            backRight = -pwr + r ;
+            frontRight = pwr + r ;
+
+            //original
+            // +    +
+            // -    +
+            // -    +
+            // +    +
+
+
+            //strafe right
+            // -    +
+            // +    +
+            // +    +
+            // -    +
+
+            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
+            if (max > 1.0) {
+                frontLeft = frontLeft / max;
+                frontRight = frontRight / max;
+                backLeft = backLeft / max;
+                backRight = backRight / max;
+            }
+
+
+
+            telemetry.addData("front left", "%.2f", frontLeft);
+            telemetry.addData("front right", "%.2f", frontRight);
+            telemetry.addData("back left", "%.2f", backLeft);
+            telemetry.addData("back right", "%.2f", backRight);
+
+            telemetry.addData("error", error);
+
+            telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
+            telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+
+            telemetry.update();
+
+            //send the power to the motors
+            robot.frontLeftMotor.setPower(frontLeft);
+            robot.backLeftMotor.setPower(backLeft);
+            robot.backRightMotor.setPower(backRight);
+            robot.frontRightMotor.setPower(frontRight);
+
+
         }
-        */
 
-/*
-        telemetry.addData("pwr:>", pwr);
-        telemetry.addData("error:>", r);
-        telemetry.addData("r:>", r);
-        telemetry.update();
-*/
-        double d; // Front distance correction
-        d = -(FRONTDIST - 45 - robot.backDistance.getDistance(DistanceUnit.MM)) / 200;
-
-        // Normalize the values so none exceeds +/- 1.0
-        frontLeft = -pwr + r + d;
-        backLeft = pwr + r + d;
-        backRight = pwr + r - d;
-        frontRight = -pwr + r - d;
-        max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
-        if (max > 1.0) {
-            frontLeft = frontLeft / max;
-            frontRight = frontRight / max;
-            backLeft = backLeft / max;
-            backRight = backRight / max;
-        }
-
-        //send the power to the motors
-        robot.frontLeftMotor.setPower(frontLeft);
-        robot.backLeftMotor.setPower(backLeft); //Changing the order in which the wheels start
-        robot.backRightMotor.setPower(backRight);
-        robot.frontRightMotor.setPower(frontRight);
 
     }
 
-    void strafeRight(int side, double pwr, Orientation target) {  //added int pwr to reduce initial power
-        //Get the current orientation
+
+
+    //strafes left at the heading it was called at
+    void strafeRight(double pwr, Orientation target) {
+
+        //orients
+        Orientation targetOrient;
         Orientation currOrient;
-        currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        //Compare the current orientation to the target
-        double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
-        double targAng = 0.0;  // target.angleUnit.DEGREES.normalize(target.firstAngle);
-        double error = targAng - currAng;
-        double frontLeft;
-        double frontRight;
-        double backLeft;
-        double backRight;
-        double max;
-        //scale the error so that it is a motor value and
-        //then scale it by a third of the power to make sure it
-        //doesn't dominate the movement
-        double r = -error / 180 * (pwr * 10);
+        //converts the target heading to a double to use in error calculation
+        targetOrient = target;
+        double targAng = targetOrient.angleUnit.DEGREES.normalize(target.firstAngle);;  // target.angleUnit.DEGREES.normalize(target.firstAngle);
 
-        //if the absolute value of r is less than
-        //.07, the motors won't do anything, so if
-        //it is less than .07, make it .07
-        /*
-        if ((r < .07) && (r > 0)) {
-            r = .07;
-        } else if ((r > -.07) && (r < 0)) {
-            r = -.07;
+        //rChanger changes the sensitivity of the R value
+        double rChanger = 10;
+        double frontLeft, frontRight, backLeft, backRight, max;
+
+
+        while((opModeIsActive()) && (gamepad1.x)){
+
+            //gamepad.x is here as that is the button I've been pressing to test this function
+            //if you want to have this run properly, you'll need to replace gamepad.x with some other qualifier t
+            // that will stop the while loop at some point, some way
+
+
+            currOrient = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            double currAng = currOrient.angleUnit.DEGREES.normalize(currOrient.firstAngle);
+
+            double error = targAng - currAng;
+
+
+            double r = (-error / 180) / (rChanger * pwr);
+            //double r = (-error/180);
+            //r = 0;
+            //r=-r;
+
+            if ((r < .07) && (r > 0)) {
+                r = .07;
+            } else if ((r > -.07) && (r < 0)) {
+                r = -.07;
+            }
+
+
+            // Normalize the values so none exceeds +/- 1.0
+            frontLeft = -pwr + r ;
+            backLeft = pwr + r ;
+            backRight = pwr + r ;
+            frontRight = -pwr + r ;
+
+            //original
+            // +    +
+            // -    +
+            // -    +
+            // +    +
+
+
+            //strafe right
+            // -    +
+            // +    +
+            // +    +
+            // -    +
+
+            max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
+            if (max > 1.0) {
+                frontLeft = frontLeft / max;
+                frontRight = frontRight / max;
+                backLeft = backLeft / max;
+                backRight = backRight / max;
+            }
+
+
+
+            telemetry.addData("front left", "%.2f", frontLeft);
+            telemetry.addData("front right", "%.2f", frontRight);
+            telemetry.addData("back left", "%.2f", backLeft);
+            telemetry.addData("back right", "%.2f", backRight);
+
+            telemetry.addData("error", error);
+
+            telemetry.addData("current heading", formatAngle(currOrient.angleUnit, currOrient.firstAngle));
+            telemetry.addData("target heading", formatAngle(targetOrient.angleUnit, targetOrient.firstAngle));
+
+            telemetry.update();
+
+            //send the power to the motors
+            robot.frontLeftMotor.setPower(frontLeft);
+            robot.backLeftMotor.setPower(backLeft);
+            robot.backRightMotor.setPower(backRight);
+            robot.frontRightMotor.setPower(frontRight);
+
+
         }
-        */
-/*
-        telemetry.addData("pwr:>", pwr);
-        telemetry.addData("error:>", r);
-        telemetry.addData("r:>", r);
-        telemetry.update();
-*/
-        double d; // Front distance correction
-        d = -(FRONTDIST - 45 - robot.backDistance.getDistance(DistanceUnit.MM)) / 200;
 
-        // Normalize the values so none exceeds +/- 1.0
-        frontLeft = pwr + r + d;
-        backLeft = -pwr + r + d;
-        backRight = -pwr + r - d;
-        frontRight = pwr + r - d;
-        max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
-        if (max > 1.0) {
-            frontLeft = frontLeft / max;
-            frontRight = frontRight / max;
-            backLeft = backLeft / max;
-            backRight = backRight / max;
-        }
 
-        //send the power to the motors
-        robot.frontLeftMotor.setPower(frontLeft);
-        robot.backLeftMotor.setPower(backLeft); //Changing the order in which the wheels start
-        robot.backRightMotor.setPower(backRight);
-        robot.frontRightMotor.setPower(frontRight);
     }
-
-
 
 //start of graham addition
 
@@ -685,6 +755,7 @@ public class Auto2021 extends LinearOpMode {
         telemetry.update();
     }
 
+
     //Scan Function_______________________________________________________________________________________________________________
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline
@@ -794,23 +865,57 @@ public class Auto2021 extends LinearOpMode {
 
 
 
-    void wobblePosition(){
-        if (NONE) {
-            driveForward();
+    void wobblePosition() {
+        double lastTime = runtime.milliseconds();
+        double noneTime = 3000;
+        double oneTime = 2000;
+        double fourTime = 1000;
+        double noneForward = 500;
+        double oneForward = 500;
+        double fourForward = 500;
+        runtime.reset();
+        /*if (position = SkystoneDeterminationPipeline.RingPosition.NONE) {
+            while (lastTime < noneTime) {
+                strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+            }
+            runtime.reset();
+            while (lastTime < noneForward) {
+                driveForward();
+
+            }
+            stopDriving();
         }
 
-        if (ONE){
-            driveForward();
+        if (ONE) {
+            while (lastTime < oneTime) {
+                strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+            }
+            runtime.reset();
+            while (lastTime < oneForward) {
+                driveForward();
+            }
+            stopDriving();
         }
 
-        if (FOUR){
-            driveForward();
-        }
 
+        if (FOUR) {
+            while (lastTime < fourTime) {
+                strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+            }
+            runtime.reset();
+            while (lastTime < fourForward) {
+                driveForward();
+            }
+            stopDriving();
+        }*/
     }
 
-    void positionRobot(){
+    void positionRobot() {
         //drive up to rings
+        while (robot.backDistance.getDistance(DistanceUnit.MM) < FRONTDIST) {
+            driveForward();
+        }
+        rotateToHeading(90);
     }
 
     void park(){
