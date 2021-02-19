@@ -174,7 +174,7 @@ public class Auto2021 extends LinearOpMode {
 
         //Wobble grabber position
         robot.wobbleServo.setPosition(grabPos);
-        //robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
         runtime.reset();
@@ -183,8 +183,11 @@ public class Auto2021 extends LinearOpMode {
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.addData("Position", pipeline.position);
         telemetry.update();
+
+        double WSrestPos1 = 0;
+
         // Don't burn CPU cycles busy-looping in this sample
-        sleep(500);
+        sleep(50);
 
         // run until the end of the match (when driver presses STOP)
 
@@ -192,9 +195,9 @@ public class Auto2021 extends LinearOpMode {
 
 
 
-        //fullRun --------------------------------------------------------------------------------------------------------------------------
+        //fullRun -------------------------------------------------------------------------------------------------------------------------
 
-        //First troubleshooting steps for this section would be to check the direction of the strafes in scan and grab
+        /*
         if ((task == fullRun) && (teamcolor == red)) {
             //This gets the robot in the proper place to sense the rings
             positionRobot();
@@ -211,9 +214,6 @@ public class Auto2021 extends LinearOpMode {
         }
         if ((task == fullRun) && (teamcolor == blue)) {
             //This gets the robot in the proper place to sense the rings
-            telemetry.addData("This is working!", 0);
-            telemetry.update();
-            driveStraightTime(.75, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 1100);
             positionRobot();
             //Navigating to the correct square
             wobblePosition();
@@ -225,36 +225,56 @@ public class Auto2021 extends LinearOpMode {
             //To powershot
             launchRing();
 
-        }
+        } */
 
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
-           /* //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            park();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            stopDriving(); */
             runtime.reset();
-            while(lastTime < 3250){
+            while (lastTime < 3250){
                 driveForward();
             }
-            //driveStraightTime(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 2500);
+            stopDriving();
+            while (lastTime < 300){
+                robot.wobbleMotor.setPower(-.25);
+            }
+            //Stop the motor
+            robot.wobbleMotor.setPower(0);
+            // Release the servo clamp
+            robot.wobbleServo.setPosition(WSrestPos1);
+            while (lastTime < 300){
+                robot.wobbleMotor.setPower(.25);
+            }
+            // Stop the wobble motor in the up position
+            robot.wobbleMotor.setPower(0);
+            runtime.reset();
+            while (lastTime < 500){
+                driveBackwards();
+            }
             stopDriving();
 
         }
         if ((task == dropPark) && (teamcolor == blue)) {
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            park();
+            runtime.reset();
+            while (lastTime < 3250){
+                driveForward();
+            }
+            stopDriving();
+            while (lastTime < 300){
+                robot.wobbleMotor.setPower(-.25);
+            }
+            //Stop the motor
+            robot.wobbleMotor.setPower(0);
+            // Release the servo clamp
+            robot.wobbleServo.setPosition(WSrestPos1);
+            while (lastTime < 300){
+                robot.wobbleMotor.setPower(.25);
+            }
+            // Stop the wobble motor in the up position
+            robot.wobbleMotor.setPower(0);
+            runtime.reset();
+            while (lastTime < 500){
+                driveBackwards();
+            }
             stopDriving();
         }
         //  -----------------------------------------------------------------------------------------------------------------------
@@ -734,11 +754,11 @@ public class Auto2021 extends LinearOpMode {
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
     void wobbleUp() {
-        robot.wobbleMotor.setPower(.25);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void wobbleDown(){
-        robot.wobbleMotor.setPower(.25);
+        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void wobbleOpen() {
@@ -882,7 +902,6 @@ public class Auto2021 extends LinearOpMode {
         double noneForward = 500;
         double oneForward = 500;
         double fourForward = 500;
-        rotateToHeading(0);
        /* enum currentPosition = ONE;
         currentPosition = pipeline.position;
         runtime.reset();
@@ -920,26 +939,22 @@ public class Auto2021 extends LinearOpMode {
             }
             stopDriving();
         }*/
-        /*while(lastTime < fourTime){
-            //strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
-
+        while(lastTime < fourTime){
+            strafeRight(.5, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         }
         runtime.reset();
         while(lastTime < fourForward){
             driveForward();
         }
-        stopDriving();*/
-        driveStraightTime(.75, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 2000);
         stopDriving();
 
     }
 
     void positionRobot() {
         //drive up to rings
-        /*while (robot.backDistance.getDistance(DistanceUnit.MM) < FRONTDIST) {
+        while (robot.backDistance.getDistance(DistanceUnit.MM) < FRONTDIST) {
             driveForward();
-        }*/
-
+        }
         rotateToHeading(90);
     }
 
