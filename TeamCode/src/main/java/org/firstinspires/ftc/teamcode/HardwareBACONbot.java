@@ -44,8 +44,8 @@ public class HardwareBACONbot
     public Servo    wobbleServo = null;
     public Servo    feederServo = null;
 
-    public RevBlinkinLedDriver blinkinLedDriver;
-    public RevBlinkinLedDriver.BlinkinPattern pattern;
+    //public RevBlinkinLedDriver blinkinLedDriver;
+    //public RevBlinkinLedDriver.BlinkinPattern pattern;
 
     public BNO055IMU imu;
 
@@ -78,7 +78,7 @@ public class HardwareBACONbot
         wobbleServo = hwMap.servo.get("WS");
         feederServo = hwMap.servo.get("FS");
 
-        blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
+        //blinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class, "blinkin");
 
 
         // BACONbot uses AndyMark NeverRest Motors
