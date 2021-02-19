@@ -62,7 +62,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 //@Disabled
 
 
-public class Auto extends LinearOpMode {
+public class Auto2021 extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     HardwareBACONbot robot = new HardwareBACONbot();
