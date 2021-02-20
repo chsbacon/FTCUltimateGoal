@@ -174,7 +174,7 @@ public class Auto2021 extends LinearOpMode {
 
         //Wobble grabber position
         robot.wobbleServo.setPosition(grabPos);
-        robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
         runtime.reset();
@@ -231,7 +231,7 @@ public class Auto2021 extends LinearOpMode {
         if ((task == dropPark) && (teamcolor == red)) {
             runtime.reset();
             while (lastTime < 3250){
-                driveForward();
+                driveBackwards();
             }
             stopDriving();
             while (lastTime < 300){
@@ -248,7 +248,7 @@ public class Auto2021 extends LinearOpMode {
             robot.wobbleMotor.setPower(0);
             runtime.reset();
             while (lastTime < 500){
-                driveBackwards();
+                driveForward();
             }
             stopDriving();
 
@@ -753,13 +753,13 @@ public class Auto2021 extends LinearOpMode {
 
 // Functions related to the wobble goal________________________________________________________________________________________________________
 
-    void wobbleUp() {
+    /*void wobbleUp() {
         robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void wobbleDown(){
         robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+    } */
 
     void wobbleOpen() {
 
@@ -771,7 +771,7 @@ public class Auto2021 extends LinearOpMode {
     }
 
     void wobbleDrop() {
-        wobbleDown();
+       // wobbleDown();
         wobbleOpen();
         telemetry.addData("Wobble goal delivered", 0);
         telemetry.update();
@@ -779,7 +779,7 @@ public class Auto2021 extends LinearOpMode {
 
     void wobbleRaise() {
         wobbleClose();
-        wobbleUp();
+       // wobbleUp();
         telemetry.addData("Wobble goal up", 0);
         telemetry.update();
     }
