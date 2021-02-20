@@ -248,13 +248,19 @@ public class Auto2021 extends LinearOpMode {
             //driveStraightDistance(0.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 860 );
             telemetry.addData("lastTime:", lastTime);
             telemetry.update();
-            while (getRuntime() < 1500){
+           /* while (getRuntime() < 1500){
+                robot.backLeftMotor.setPower(-.5);
+                robot.frontRightMotor.setPower(.5);
+                robot.frontLeftMotor.setPower(-.5);
+                robot.backRightMotor.setPower(.5);
+            }*/
+
+            while ((robot.backDistance.getDistance(DistanceUnit.MM) > 100) && opModeIsActive()){
                 robot.backLeftMotor.setPower(-.5);
                 robot.frontRightMotor.setPower(.5);
                 robot.frontLeftMotor.setPower(-.5);
                 robot.backRightMotor.setPower(.5);
             }
-
             while (lastTime < 1000){
                 robot.wobbleMotor.setPower(.25);
             }
