@@ -264,6 +264,7 @@ public class Auto2021 extends LinearOpMode {
             stopDriving();
             driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
             stopDriving();
+
             while (lastTime < 300){
                 robot.wobbleMotor.setPower(-.25);
             }
