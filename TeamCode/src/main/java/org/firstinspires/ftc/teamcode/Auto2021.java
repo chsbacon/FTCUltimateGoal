@@ -230,9 +230,11 @@ public class Auto2021 extends LinearOpMode {
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
             runtime.reset();
-            while (lastTime < 3250){
-                driveStraightDistance(.75,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),900 );
-            }
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            stopDriving();
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            stopDriving();
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
             stopDriving();
             while (lastTime < 300){
                 robot.wobbleMotor.setPower(-.25);
@@ -255,9 +257,12 @@ public class Auto2021 extends LinearOpMode {
         }
         if ((task == dropPark) && (teamcolor == blue)) {
             runtime.reset();
-            while (lastTime < 3250){
-                driveStraightDistance(.75,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),900 );
-            }
+
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            stopDriving();
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            stopDriving();
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
             stopDriving();
             while (lastTime < 300){
                 robot.wobbleMotor.setPower(-.25);
