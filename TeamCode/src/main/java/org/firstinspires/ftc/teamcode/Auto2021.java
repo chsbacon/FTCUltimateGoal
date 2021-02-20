@@ -230,13 +230,21 @@ public class Auto2021 extends LinearOpMode {
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
             runtime.reset();
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             stopDriving();
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            sleep(100);
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             stopDriving();
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
+            sleep(100);
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             stopDriving();
-            while (lastTime < 300){
+            sleep(100);
+            runtime.reset();
+            telemetry.addData("Finished Driving", 0);
+            telemetry.update();
+            rotateToHeading(45);
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
+            while (lastTime < 1000){
                 robot.wobbleMotor.setPower(-.25);
             }
             //Stop the motor
