@@ -232,18 +232,23 @@ public class Auto2021 extends LinearOpMode {
             runtime.reset();
             driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             stopDriving();
-            sleep(100);
+            sleep(300);
             driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             stopDriving();
-            sleep(100);
+            sleep(300);
             driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             stopDriving();
-            sleep(100);
-            runtime.reset();
-            telemetry.addData("Finished Driving", 0);
-            telemetry.update();
+            sleep(300);
+            //runtime.reset();
+            //telemetry.addData("Finished Driving", 0);
+            //telemetry.update();
             //rotateToHeading(45);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),2500 );
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
+            sleep(300);
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
+            sleep(300);
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
+            sleep(300);
             while (lastTime < 1000){
                 robot.wobbleMotor.setPower(.25);
             }
