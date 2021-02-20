@@ -209,7 +209,7 @@ public class Auto2021 extends LinearOpMode {
                 telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
                 telemetry.update();
             }
-
+            stopDriving(); 
         }
         if ((task == fullRun) && (teamcolor == blue)) {
             sleep(20000); 
@@ -222,7 +222,7 @@ public class Auto2021 extends LinearOpMode {
                 telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
                 telemetry.update();
             }
-
+            stopDriving();
         }
 
         //drop&park------------------------------------------------------------------------------------------------
@@ -237,23 +237,6 @@ public class Auto2021 extends LinearOpMode {
                 telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
                 telemetry.update();
             }
-            /*
-            while (lastTime < 1000){
-                robot.wobbleMotor.setPower(.25);
-            }
-            //Stop the motor
-            robot.wobbleMotor.setPower(0);
-            // Release the servo clamp
-            robot.wobbleServo.setPosition(WSrestPos1);
-            while (lastTime < 300){
-                robot.wobbleMotor.setPower(-.25);
-            }
-            // Stop the wobble motor in the up position
-            robot.wobbleMotor.setPower(0);
-            runtime.reset();
-            while (lastTime < 500){
-                driveForward();
-            } */
             stopDriving();
 
         }
