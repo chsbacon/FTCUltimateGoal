@@ -255,7 +255,7 @@ public class Auto2021 extends LinearOpMode {
                 robot.backRightMotor.setPower(.5);
             }*/
 
-            while ((robot.backDistance.getDistance(DistanceUnit.MM) > 100) && opModeIsActive()){
+            while ((robot.backDistance.getDistance(DistanceUnit.MM) > 800) && opModeIsActive()){
                 robot.backLeftMotor.setPower(-.5);
                 robot.frontRightMotor.setPower(.5);
                 robot.frontLeftMotor.setPower(-.5);
