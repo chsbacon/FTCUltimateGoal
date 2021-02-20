@@ -187,7 +187,7 @@ public class Auto2021 extends LinearOpMode {
         double WSrestPos1 = 0;
 
         // Don't burn CPU cycles busy-looping in this sample
-        sleep(50);
+        //sleep(50);
 
         // run until the end of the match (when driver presses STOP)
 
@@ -246,7 +246,9 @@ public class Auto2021 extends LinearOpMode {
             driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
             sleep(300);*/
             //driveStraightDistance(0.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 860 );
-            while (lastTime < 1000){
+            telemetry.addData("lastTime:", lastTime);
+            telemetry.update();
+            while (getRuntime() < 1500){
                 robot.backLeftMotor.setPower(-.5);
                 robot.frontRightMotor.setPower(.5);
                 robot.frontLeftMotor.setPower(-.5);
