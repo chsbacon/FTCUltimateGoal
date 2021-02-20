@@ -242,17 +242,17 @@ public class Auto2021 extends LinearOpMode {
             runtime.reset();
             telemetry.addData("Finished Driving", 0);
             telemetry.update();
-            rotateToHeading(45);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
+            //rotateToHeading(45);
+            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),2500 );
             while (lastTime < 1000){
-                robot.wobbleMotor.setPower(-.25);
+                robot.wobbleMotor.setPower(.25);
             }
             //Stop the motor
             robot.wobbleMotor.setPower(0);
             // Release the servo clamp
             robot.wobbleServo.setPosition(WSrestPos1);
             while (lastTime < 300){
-                robot.wobbleMotor.setPower(.25);
+                robot.wobbleMotor.setPower(-.25);
             }
             // Stop the wobble motor in the up position
             robot.wobbleMotor.setPower(0);
