@@ -231,7 +231,7 @@ public class Auto2021 extends LinearOpMode {
         if ((task == dropPark) && (teamcolor == red)) {
             runtime.reset();
             while (lastTime < 3250){
-                driveStraightDistance(.75,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),900 );
+                driveBackwards();
             }
             stopDriving();
             while (lastTime < 300){
@@ -256,7 +256,7 @@ public class Auto2021 extends LinearOpMode {
         if ((task == dropPark) && (teamcolor == blue)) {
             runtime.reset();
             while (lastTime < 3250){
-                driveStraightDistance(.75,robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),900 );
+                driveForward();
             }
             stopDriving();
             while (lastTime < 300){
