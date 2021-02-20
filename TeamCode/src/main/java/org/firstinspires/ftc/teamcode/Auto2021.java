@@ -199,6 +199,7 @@ public class Auto2021 extends LinearOpMode {
 
 
         if ((task == fullRun) && (teamcolor == red)) {
+            sleep(20000);
             double timeVar = getRuntime()*1000;
             while ((getRuntime()*1000) - timeVar < 5200){
                 robot.backLeftMotor.setPower(-.5);
@@ -211,6 +212,7 @@ public class Auto2021 extends LinearOpMode {
 
         }
         if ((task == fullRun) && (teamcolor == blue)) {
+            sleep(20000); 
             double timeVar = getRuntime()*1000;
             while ((getRuntime()*1000) - timeVar < 5200){
                 robot.backLeftMotor.setPower(-.5);
@@ -225,7 +227,7 @@ public class Auto2021 extends LinearOpMode {
 
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
-
+            sleep(20000);
             double timeVar = getRuntime()*1000;
             while ((getRuntime()*1000) - timeVar < 5200){
                 robot.backLeftMotor.setPower(-.5);
@@ -256,6 +258,7 @@ public class Auto2021 extends LinearOpMode {
 
         }
         if ((task == dropPark) && (teamcolor == blue)) {
+            sleep(20000);
             double timeVar = getRuntime()*1000;
             while ((getRuntime()*1000) - timeVar < 5200){
                 robot.backLeftMotor.setPower(-.5);
