@@ -197,70 +197,45 @@ public class Auto2021 extends LinearOpMode {
 
         //fullRun -------------------------------------------------------------------------------------------------------------------------
 
-        /*
+
         if ((task == fullRun) && (teamcolor == red)) {
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            park();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            stopDriving();
-            //To powershot
-            launchRing();
+            double timeVar = getRuntime()*1000;
+            while ((getRuntime()*1000) - timeVar < 5200){
+                robot.backLeftMotor.setPower(-.5);
+                robot.frontRightMotor.setPower(.5);
+                robot.frontLeftMotor.setPower(-.5);
+                robot.backRightMotor.setPower(.5);
+                telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
+                telemetry.update();
+            }
 
         }
         if ((task == fullRun) && (teamcolor == blue)) {
-            //This gets the robot in the proper place to sense the rings
-            positionRobot();
-            //Navigating to the correct square
-            wobblePosition();
-            //Place the wobble goal in the square
-            wobbleDrop();
-            //go drop the wobble goal in the correct zone and return to the parking line
-            park();
-            stopDriving();
-            //To powershot
-            launchRing();
+            double timeVar = getRuntime()*1000;
+            while ((getRuntime()*1000) - timeVar < 5200){
+                robot.backLeftMotor.setPower(-.5);
+                robot.frontRightMotor.setPower(.5);
+                robot.frontLeftMotor.setPower(-.5);
+                robot.backRightMotor.setPower(.5);
+                telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
+                telemetry.update();
+            }
 
-        } */
+        }
 
         //drop&park------------------------------------------------------------------------------------------------
         if ((task == dropPark) && (teamcolor == red)) {
-            /*runtime.reset();
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
-            stopDriving();
-            sleep(300);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
-            stopDriving();
-            sleep(300);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
-            stopDriving();
-            sleep(300);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
-            sleep(300);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
-            sleep(300);
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1500 );
-            sleep(300);*/
-            //driveStraightDistance(0.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES), 860 );
-            telemetry.addData("lastTime:", lastTime);
-            telemetry.update();
-           /* while (getRuntime() < 1500){
-                robot.backLeftMotor.setPower(-.5);
-                robot.frontRightMotor.setPower(.5);
-                robot.frontLeftMotor.setPower(-.5);
-                robot.backRightMotor.setPower(.5);
-            }*/
 
-            while ((robot.backDistance.getDistance(DistanceUnit.MM) > 800) && opModeIsActive()){
+            double timeVar = getRuntime()*1000;
+            while ((getRuntime()*1000) - timeVar < 5200){
                 robot.backLeftMotor.setPower(-.5);
                 robot.frontRightMotor.setPower(.5);
                 robot.frontLeftMotor.setPower(-.5);
                 robot.backRightMotor.setPower(.5);
+                telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
+                telemetry.update();
             }
+            /*
             while (lastTime < 1000){
                 robot.wobbleMotor.setPower(.25);
             }
@@ -276,35 +251,19 @@ public class Auto2021 extends LinearOpMode {
             runtime.reset();
             while (lastTime < 500){
                 driveForward();
-            }
+            } */
             stopDriving();
 
         }
         if ((task == dropPark) && (teamcolor == blue)) {
-            runtime.reset();
-
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
-            stopDriving();
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
-            stopDriving();
-            driveStraightTime(.3, robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES),1000 );
-            stopDriving();
-
-            while (lastTime < 300){
-                robot.wobbleMotor.setPower(-.25);
-            }
-            //Stop the motor
-            robot.wobbleMotor.setPower(0);
-            // Release the servo clamp
-            robot.wobbleServo.setPosition(WSrestPos1);
-            while (lastTime < 300){
-                robot.wobbleMotor.setPower(.25);
-            }
-            // Stop the wobble motor in the up position
-            robot.wobbleMotor.setPower(0);
-            runtime.reset();
-            while (lastTime < 500){
-                driveBackwards();
+            double timeVar = getRuntime()*1000;
+            while ((getRuntime()*1000) - timeVar < 5200){
+                robot.backLeftMotor.setPower(-.5);
+                robot.frontRightMotor.setPower(.5);
+                robot.frontLeftMotor.setPower(-.5);
+                robot.backRightMotor.setPower(.5);
+                telemetry.addData("runTime:", (getRuntime()*1000)- timeVar);
+                telemetry.update();
             }
             stopDriving();
         }
